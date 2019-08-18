@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html>
+  <head><meta name="generator" content="Hexo 3.9.0">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="浮沉中的沙砾">
+  <meta name="keyword" content="WellMan Java">
+  
+    <link rel="shortcut icon" type="image/ico" href="/images/favicon.ico">
+  
+  <title>
+    
+      在CentOS7上安装docker | WellMan
+    
+  </title>
+  <link href="/css/font-awesome.min.css" rel="stylesheet">
+  <link href="/css/nprogress.min.css" rel="stylesheet">
+  <!-- <link href="/css/agate.css" rel="stylesheet"> -->
+  <link href="/css/railscasts.css" rel="stylesheet">
+  <!--<link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/normal.min.css" rel="stylesheet">-->
+  <link rel="stylesheet" href="/css/style.css">
+  
+  <script src="/js/jquery.min.js"></script>
+  <script src="/js/geopattern.min.js"></script>
+  <script src="/js/nprogress.min.js"></script>
+  <script src="/js/highlight.min.js"></script>
+  
+    <script src="/js/qrious.js"></script>
+  
+  
+  
+  
+    <!-- MathJax support START -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <!-- <script type="text/javascript" src="/js/MathJax.js"></script> -->
+    <!-- MathJax support END -->
+  
+
+
+</head>
+<!--<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>-->
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <img src="/images/wellman.png" width="120px" height="40px"/>
+    </a>
+    <ul class="left-list">
+      
+        <li class="list-item">
+          <i class="fa fa-home"></i>
+          
+            <a href="/" class="item-link">首页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          <i class="fa fa-tags"></i>
+          
+            <a href="/tags" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          <i class="fa fa-archive"></i>
+          
+            <a href="/archives" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          <i class="fa fa-address-card"></i>
+          
+            <a href="/about" class="item-link">关于</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">首页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about" class="menu-link">关于</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <!--<div id="article-banner">
+  <h2>在CentOS7上安装docker</h2>
+  <p class="post-date">2019-07-16</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>-->
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <header>
+        <h2>在CentOS7上安装docker</h2>
+        <p class="post-ref">
+          <span class="post-date">
+            <i class="fa fa-calendar"></i>
+            2019-07-16
+          </span>
+          <span>
+              
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                  <span class="fa fa-tags">标签</span>
+                  
+  <a href="/tags#docker" >
+    <span class="tag-code">docker</span>
+  </a>
+
+              
+          </span>
+        </p>
+    </header>
+    <section class="markdown-content"><p>docker镜像，是基于基础镜像 scratch 一层一层包装而成，可以理解成装饰器模式，外面一层的镜像都包含一个内层的镜像。这是一种UnionFS(联合文件系统)的实现，docker容器之所以轻量，比如基础的centos镜像才200M，是因为它只包含了bootloader以及kernel，这也称之为bootfs(引导文件系统)，在其上为rootfs(基础文件系统)，就包含常见的 /opt,/bin 等(linux所有都是文件)</p>
+<p>自17年开始，docker分为docker-ce（社区版）、docker-ee（企业版），而docker-io是较早的版本，如果不需要使用企业版的收费功能，通常用的都是docker-ce版</p>
+<h5 id="前置条件："><a href="#前置条件：" class="headerlink" title="前置条件："></a>前置条件：</h5><ul>
+<li>64位centos7++</li>
+<li>centos-extras 需要启用</li>
+</ul>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><h3 id="卸载老版本"><a href="#卸载老版本" class="headerlink" title="卸载老版本"></a>卸载老版本</h3><p>前面说到，现在dockers区分CE和EE，而老版本的名字是诸如 <code>docker</code>，<code>docker-engine</code>这种，完全不一致，所以需要卸载老的版本以及其关联的依赖</p>
+<blockquote>
+<ul>
+<li>如果机器没有安装过老版本的docker，执行下述命令不会有实际产出</li>
+<li>下述命令的 \ 代表连接符，这里需要删除多个，一行写不清晰，所以用连接符分多行</li>
+<li>自己测试一般都是root用户，如果不是 <code>root</code> 用户，需要加 <code>sudo</code></li>
+<li>下述命令来源于官网</li>
+</ul>
+</blockquote>
+<pre><code>[root@wellman101 ~]# yum remove docker \
+              docker-client \
+              docker-client-latest \
+              docker-common \
+              docker-latest \
+              docker-latest-logrotate \
+              docker-logrotate \
+              docker-engine</code></pre><h3 id="设置仓库"><a href="#设置仓库" class="headerlink" title="设置仓库"></a>设置仓库</h3><p>如果是第一次在机器上安装Docker CE，需要首先设置仓库，之后，就可以从仓库安装和更新docker</p>
+<p>首先安装必须的库</p>
+<blockquote>
+<ul>
+<li>yum的配置管理 <code>yum-config-manager</code> 依赖于 <code>yum-utils</code></li>
+<li><code>devicemapper</code> 存储驱动需要 <code>device-mapper-persistent-data</code> 和 <code>lvm2</code></li>
+</ul>
+</blockquote>
+<pre><code>[root@wellman101 ~]# yum install -y yum-utils \
+      device-mapper-persistent-data \
+      lvm2</code></pre><p>然后设置一个稳定的yum仓库</p>
+<blockquote>
+<p>注意，由于某些原因，国内访问国外网站很慢，所以这里我们将docker仓库设置为阿里的仓库</p>
+</blockquote>
+<pre><code>[root@wellman101 ~]# yum-config-manager \
+    --add-repo \
+    http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo</code></pre><h3 id="安装docker"><a href="#安装docker" class="headerlink" title="安装docker"></a>安装docker</h3><p>官网提供了三种安装docker的方式，这里使用第一种，也是推荐的一种，直接从前面配置的仓库安装。</p>
+<p>查看当前有哪些可以安装的版本</p>
+<pre><code>[root@wellman101 ~]# yum list docker-ce --showduplicates | sort -r
+已加载插件：fastestmirror
+可安装的软件包
+ * updates: mirrors.cn99.com
+Loading mirror speeds from cached hostfile
+ * extras: mirrors.cn99.com
+docker-ce.x86_64            3:18.09.8-3.el7                     docker-ce-stable
+docker-ce.x86_64            3:18.09.7-3.el7                     docker-ce-stable
+docker-ce.x86_64            3:18.09.6-3.el7                     docker-ce-stable
+docker-ce.x86_64            3:18.09.5-3.el7                     docker-ce-stable
+docker-ce.x86_64            3:18.09.4-3.el7                     docker-ce-stable
+docker-ce.x86_64            3:18.09.3-3.el7                     docker-ce-stable
+docker-ce.x86_64            3:18.09.2-3.el7                     docker-ce-stable
+docker-ce.x86_64            3:18.09.1-3.el7                     docker-ce-stable
+docker-ce.x86_64            3:18.09.0-3.el7                     docker-ce-stable
+docker-ce.x86_64            18.06.3.ce-3.el7                    docker-ce-stable
+docker-ce.x86_64            18.06.2.ce-3.el7                    docker-ce-stable
+docker-ce.x86_64            18.06.1.ce-3.el7                    docker-ce-stable
+docker-ce.x86_64            18.06.0.ce-3.el7                    docker-ce-stable
+docker-ce.x86_64            18.03.1.ce-1.el7.centos             docker-ce-stable
+docker-ce.x86_64            18.03.0.ce-1.el7.centos             docker-ce-stable
+docker-ce.x86_64            17.12.1.ce-1.el7.centos             docker-ce-stable
+docker-ce.x86_64            17.12.0.ce-1.el7.centos             docker-ce-stable
+docker-ce.x86_64            17.09.1.ce-1.el7.centos             docker-ce-stable
+docker-ce.x86_64            17.09.0.ce-1.el7.centos             docker-ce-stable
+docker-ce.x86_64            17.06.2.ce-1.el7.centos             docker-ce-stable
+docker-ce.x86_64            17.06.1.ce-1.el7.centos             docker-ce-stable
+docker-ce.x86_64            17.06.0.ce-1.el7.centos             docker-ce-stable
+docker-ce.x86_64            17.03.3.ce-1.el7                    docker-ce-stable
+docker-ce.x86_64            17.03.2.ce-1.el7.centos             docker-ce-stable
+docker-ce.x86_64            17.03.1.ce-1.el7.centos             docker-ce-stable
+docker-ce.x86_64            17.03.0.ce-1.el7.centos             docker-ce-stable
+ * base: mirrors.aliyun.com</code></pre><p>可以指定版本安装</p>
+<pre><code>[root@wellman101 ~]# yum install -y docker-ce-&lt;VERSION_STRING&gt; docker-ce-cli-&lt;VERSION_STRING&gt; containerd.io</code></pre><p>如果不指定版本，则默认安装最新版本</p>
+<pre><code>[root@wellman101 ~]# yum install -y docker-ce docker-ce-cli containerd.io</code></pre><h3 id="启动与验证"><a href="#启动与验证" class="headerlink" title="启动与验证"></a>启动与验证</h3><p>启动：</p>
+<pre><code>[root@wellman101 ~]# systemctl start docker</code></pre><p>查看docker版本</p>
+<pre><code>[root@wellman101 ~]# docker --version
+Docker version 18.09.8, build 0dd43dd87f</code></pre></section>
+
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/2019/07/15/docker-introduction.html">
+        <span class="nav-arrow">← </span>
+        
+          docker基本概念
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/2019/07/19/centos7-forget-root-passwd.html">
+        
+          CentOS7忘记root密码
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    <!--
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">若你觉得我的文章对你有帮助，欢迎点击上方按钮对我打赏</p>
+      </div>
+    -->
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    <!--
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    -->
+    <!-- 二维码 END -->
+    
+      <!-- No Comment -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    /**var url = 'http://localhost:4000/2019/07/17/install-docker-on-centos7.html';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')；*/
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2019 | WellMan 
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("/js/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<!--<script>
+  $('pre code').each(function(i, block) {
+    //hljs.highlightBlock(block);
+    var lines = $(this).text().split('\n').length - 1;
+    var $numbering = $('<ul/>').addClass('pre-numbering');
+    $(this)
+      .addClass('has-numbering')
+      .parent()
+      .append($numbering);
+    for(i=1;i<=lines;i++){
+      $numbering.append($('<li/>').text(i));
+    }
+  });
+</script>-->
+
+<!-- 代码高亮 -->
+<script>hljs.initHighlightingOnLoad();</script>
+<!--<script>
+  var hasLine = 'false';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>-->
+<!-- Baidu Tongji -->
+
+<script src="/js/script.js"></script>
+  </body>
+</html>

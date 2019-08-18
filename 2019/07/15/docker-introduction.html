@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html>
+  <head><meta name="generator" content="Hexo 3.9.0">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="浮沉中的沙砾">
+  <meta name="keyword" content="WellMan Java">
+  
+    <link rel="shortcut icon" type="image/ico" href="/images/favicon.ico">
+  
+  <title>
+    
+      docker基本概念 | WellMan
+    
+  </title>
+  <link href="/css/font-awesome.min.css" rel="stylesheet">
+  <link href="/css/nprogress.min.css" rel="stylesheet">
+  <!-- <link href="/css/agate.css" rel="stylesheet"> -->
+  <link href="/css/railscasts.css" rel="stylesheet">
+  <!--<link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/normal.min.css" rel="stylesheet">-->
+  <link rel="stylesheet" href="/css/style.css">
+  
+  <script src="/js/jquery.min.js"></script>
+  <script src="/js/geopattern.min.js"></script>
+  <script src="/js/nprogress.min.js"></script>
+  <script src="/js/highlight.min.js"></script>
+  
+    <script src="/js/qrious.js"></script>
+  
+  
+  
+  
+    <!-- MathJax support START -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <!-- <script type="text/javascript" src="/js/MathJax.js"></script> -->
+    <!-- MathJax support END -->
+  
+
+
+</head>
+<!--<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>-->
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <img src="/images/wellman.png" width="120px" height="40px"/>
+    </a>
+    <ul class="left-list">
+      
+        <li class="list-item">
+          <i class="fa fa-home"></i>
+          
+            <a href="/" class="item-link">首页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          <i class="fa fa-tags"></i>
+          
+            <a href="/tags" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          <i class="fa fa-archive"></i>
+          
+            <a href="/archives" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          <i class="fa fa-address-card"></i>
+          
+            <a href="/about" class="item-link">关于</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">首页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about" class="menu-link">关于</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <!--<div id="article-banner">
+  <h2>docker基本概念</h2>
+  <p class="post-date">2019-07-15</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>-->
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <header>
+        <h2>docker基本概念</h2>
+        <p class="post-ref">
+          <span class="post-date">
+            <i class="fa fa-calendar"></i>
+            2019-07-15
+          </span>
+          <span>
+              
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                  <span class="fa fa-tags">标签</span>
+                  
+  <a href="/tags#docker" >
+    <span class="tag-code">docker</span>
+  </a>
+
+              
+          </span>
+        </p>
+    </header>
+    <section class="markdown-content"><h2 id="什么是docekr"><a href="#什么是docekr" class="headerlink" title="什么是docekr"></a>什么是docekr</h2><p>docker是基于GO语言开发的云开源容器项目，诞生与2013年。</p>
+<p>其主要目标是”build, ship and run any app, anywhere”，即通过对应用的封装(packaging)， 分发(distribution)，部署(deployment)，运行(runtime)生命周期进行管理，达到应用组件”一次封装，到处运行”的目的。</p>
+<p>docker来源于linux的容器技术(LXC),在LXC的基础上，docker进一步优化了容器的使用体验，它提供了各种容器管理工具让用户无需关心底层操作，引入分层文件系统构建和高效的镜像机制，降低了迁移的难度。现在新版的docker已不再直接基于LXC</p>
+<h2 id="为什么使用docker"><a href="#为什么使用docker" class="headerlink" title="为什么使用docker"></a>为什么使用docker</h2><p>以Java应用为例，在以前，我们编码完成后，要先在测试环境进行测试，所以我们会将打包好的war包交给运维人员，由他们在测试环境进行部署，测试通过后，也由他们在生产环境进行部署。</p>
+<p>我们常常遇到这样一种情况，同样一个war包，在测试环境运行得好好的，可是一部署到生产环境，应用无法启动，费劲千辛万苦，最终发现测试和生产环境某些配置不一致，更可怕的是，应用可能需要部署到很多台服务器上，这简直就是灾难，也严重影响工作效率。</p>
+<p>而docker，最终提交给运维的是一个包含运行环境的，能直接运行的镜像，不管是在哪里运行，应用的运行环境都是一致的，不再会因为应用的环境问题导致应用无法启动。</p>
+<p>docker与传统虚拟机相比，他的启动更快，对系统的资源需求更少，它不像虚拟机每个都需要分配独占的内存和磁盘等资源，docker共享宿主机的硬件资源。docker有比虚拟机更少的抽象层，由于docker不需要Hypervisor实现硬件资源的虚拟化，运行在docker上的程序使用的都是物理机的硬件资源。</p>
+<h2 id="核心概念"><a href="#核心概念" class="headerlink" title="核心概念"></a>核心概念</h2><h3 id="镜像-image"><a href="#镜像-image" class="headerlink" title="镜像(image)"></a>镜像(image)</h3><p>镜像是创建docker容器的基础，是一种轻量级的，可执行的独立软件包，用来打包软件运行环境和基于运行环境开发的软件，它包含某个软件所需的所有内容，包括代码、运行时、库、环境变量和配置文件。</p>
+<p>docker镜像的底层原理是联合文件系统(UnionFS)，镜像像一个同心圆，一层套着一层。</p>
+<blockquote>
+<p>联合文件系统(UnionFS)是一种分层、轻量级，高性能的文件系统，它支持对文件系统的修改作为一次提交来一层层叠加，同时可以将不同目录挂载到同一虚拟文件系统下</p>
+</blockquote>
+<p>所有的镜像的顶层都基于基础镜像(没有父镜像，同心圆的最内层)，我们平时使用的镜像就类似于所看到的同心圆的最外层，它实际是由一层层的文件系统叠加而成。</p>
+<p>docker镜像的最底层是引导文件系统(bootfs)，也就是同心圆的最内层。bootfs主要包括bootloader和kernel，bootlaoder是引导加载kernel的，linux系统刚启动时会加载bootfs文件系统，当boot加载完后，整个内核就存在于内存中，此时内存的使用权已有bootfs转交给内核，系统也会卸载bootfs。</p>
+<p>在bootfs之上的时rootfs，rootfs包含典型的linux系统中的 /etc, /bin 等标准目录和文件。</p>
+<p>我们平时安装操作系统时，一个centos的镜像(ISO)文件大概4G左右，但是centos的docker镜像只有大概200M，是因为它只包含基础内容，比如最基本的命令，工具和程序库，也就是构建于bootfs之上，额外提供所需的rootfs即可，其他硬件资源等共用宿主机的。不同的发行版，其bootfs基本一致，rootfs会有些差别。</p>
+<h3 id="容器"><a href="#容器" class="headerlink" title="容器"></a>容器</h3><p>docker容器类似于一个轻量级的沙箱，是运行的镜像示例，所以也就是包含各种环境和软件的简易版的linux系统</p>
+<p>容器的启动，开始，停止，删除等都是相互隔离，互补可见的。</p>
+<p>镜像自身是只读的，容器在镜像启动的时候，会在镜像的最上层创建一个可写层。</p>
+<h3 id="仓库"><a href="#仓库" class="headerlink" title="仓库"></a>仓库</h3><p>仓库是镜像文件的存放场所，同一类型的镜像文件通过标签(tag)区分，标签类似于版本号。</p>
+</section>
+
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/2019/07/15/springboot-helloworld.html">
+        <span class="nav-arrow">← </span>
+        
+          SpringBoot之HelloWorld
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/2019/07/17/install-docker-on-centos7.html">
+        
+          在CentOS7上安装docker
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    <!--
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">若你觉得我的文章对你有帮助，欢迎点击上方按钮对我打赏</p>
+      </div>
+    -->
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    <!--
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    -->
+    <!-- 二维码 END -->
+    
+      <!-- No Comment -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    /**var url = 'http://localhost:4000/2019/07/15/docker-introduction.html';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')；*/
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2019 | WellMan 
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("/js/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<!--<script>
+  $('pre code').each(function(i, block) {
+    //hljs.highlightBlock(block);
+    var lines = $(this).text().split('\n').length - 1;
+    var $numbering = $('<ul/>').addClass('pre-numbering');
+    $(this)
+      .addClass('has-numbering')
+      .parent()
+      .append($numbering);
+    for(i=1;i<=lines;i++){
+      $numbering.append($('<li/>').text(i));
+    }
+  });
+</script>-->
+
+<!-- 代码高亮 -->
+<script>hljs.initHighlightingOnLoad();</script>
+<!--<script>
+  var hasLine = 'false';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>-->
+<!-- Baidu Tongji -->
+
+<script src="/js/script.js"></script>
+  </body>
+</html>

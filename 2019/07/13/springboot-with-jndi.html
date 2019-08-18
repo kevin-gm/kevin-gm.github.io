@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html>
+  <head><meta name="generator" content="Hexo 3.9.0">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="浮沉中的沙砾">
+  <meta name="keyword" content="WellMan Java">
+  
+    <link rel="shortcut icon" type="image/ico" href="/images/favicon.ico">
+  
+  <title>
+    
+      SpringBoot应用集成JNDI数据源 | WellMan
+    
+  </title>
+  <link href="/css/font-awesome.min.css" rel="stylesheet">
+  <link href="/css/nprogress.min.css" rel="stylesheet">
+  <!-- <link href="/css/agate.css" rel="stylesheet"> -->
+  <link href="/css/railscasts.css" rel="stylesheet">
+  <!--<link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/normal.min.css" rel="stylesheet">-->
+  <link rel="stylesheet" href="/css/style.css">
+  
+  <script src="/js/jquery.min.js"></script>
+  <script src="/js/geopattern.min.js"></script>
+  <script src="/js/nprogress.min.js"></script>
+  <script src="/js/highlight.min.js"></script>
+  
+    <script src="/js/qrious.js"></script>
+  
+  
+  
+  
+    <!-- MathJax support START -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <!-- <script type="text/javascript" src="/js/MathJax.js"></script> -->
+    <!-- MathJax support END -->
+  
+
+
+</head>
+<!--<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>-->
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <img src="/images/wellman.png" width="120px" height="40px"/>
+    </a>
+    <ul class="left-list">
+      
+        <li class="list-item">
+          <i class="fa fa-home"></i>
+          
+            <a href="/" class="item-link">首页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          <i class="fa fa-tags"></i>
+          
+            <a href="/tags" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          <i class="fa fa-archive"></i>
+          
+            <a href="/archives" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          <i class="fa fa-address-card"></i>
+          
+            <a href="/about" class="item-link">关于</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">首页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about" class="menu-link">关于</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <!--<div id="article-banner">
+  <h2>SpringBoot应用集成JNDI数据源</h2>
+  <p class="post-date">2019-07-13</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>-->
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <header>
+        <h2>SpringBoot应用集成JNDI数据源</h2>
+        <p class="post-ref">
+          <span class="post-date">
+            <i class="fa fa-calendar"></i>
+            2019-07-13
+          </span>
+          <span>
+              
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                  <span class="fa fa-tags">标签</span>
+                  
+  <a href="/tags#springboot" >
+    <span class="tag-code">springboot</span>
+  </a>
+
+  <a href="/tags#jndi" >
+    <span class="tag-code">jndi</span>
+  </a>
+
+              
+          </span>
+        </p>
+    </header>
+    <section class="markdown-content"><p>本文的目标是：在SpringBoot应用中使用JNDI作为应用的数据源。</p>
+<p>SpringBoot项目可以很方便的集成数据源，一般我们只需要如下几个步骤：</p>
+<p>引入相关依赖</p>
+<pre><code>&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-boot-starter-jdbc&lt;/artifactId&gt;
+    &lt;version&gt;**&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;mysql&lt;/groupId&gt;
+    &lt;artifactId&gt;mysql-connector-java&lt;/artifactId&gt;
+    &lt;version&gt;**&lt;/version&gt;
+&lt;/dependency&gt;</code></pre><p>在 application.yml 中设置数据库地址以及相关连接参数</p>
+<pre><code>spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/practice
+    driver-class-name: com.mysql.jdbc.Driver
+    username: mysql
+    password: mysql</code></pre><p>此时，就可以使用JDBC查询数据库。</p>
+<p>可以看到，上面的数据库连接信息直接配置在了 <code>application.yml</code> 这个配置文件中，这样做很不安全。</p>
+<p>当然，我们可以引入<strong>配置中心</strong>，将数据库连接信息配置在配置中心，并且对相关内容进行加密。</p>
+<p>不过，很多时候，很多公司，更习惯于将数据库连接信息统一配置在 应用服务器(比如Tomcat)，由系统运维人员统一对应用服务器和数据库进行管理，此时我们就需要用到 JNDI。</p>
+<p>Spring Boot为我们做了很多事，所以其使用JNDI获取数据源依旧很简单，我们分两种情况说明：</p>
+<ul>
+<li><p>使用内置的 <code>servlet</code> 容器 ，以默认的 <code>Tomcat</code>为例</p>
+<ol>
+<li><p>修改 <code>application.yml</code> 中的配置，<code>spring.datasource</code> 此时只需要唯一配置 <code>jndi-name</code></p>
+<pre><code>&gt; jndi-name 的值，可以是 ```java:/comp/env/jdbc/practice```，也可以是 ```jdbc/practice```，Spring Boot在解析参数时，如果没有前缀，会自动补上
+
+   spring:
+        datasource:
+        jndi-name: java:/comp/env/jdbc/practice</code></pre></li>
+</ol>
+</li>
+</ul>
+<ol start="2">
+<li><p>添加 JNDI 的配置代码。JNDI本来应该配置在 JBOSS或者Tomcat这些容器里面，而这里我们使用的时内置容器，无法直接在容器里面配置，所以需要通过编码的方式添加 JNDI 信息</p>
+<pre><code>   @Configuration
+    public class JndiConfig {
+
+        @Bean
+        public ServletWebServerFactory servletContainer() {
+            TomcatServletWebServerFactory tomcat = new TomcatServletWebServerFactory() {
+                @Override
+                protected TomcatWebServer getTomcatWebServer(Tomcat tomcat) {
+                    // 内置容器默认禁用了 命名服务，此处必须要启用
+                    tomcat.enableNaming();
+                    return super.getTomcatWebServer(tomcat);
+                }
+                @Override
+                protected void postProcessContext(Context context) {
+                    // 在JNDI里，资源抽象为了 Resouce，此处是配置数据库连接信息
+                    ContextResource resource = new ContextResource();
+                    resource.setName(&quot;jdbc/practice&quot;);
+                    resource.setType(DataSource.class.getName());
+                    resource.setProperty(&quot;driverClassName&quot;, &quot;com.mysql.jdbc.Driver&quot;);
+                    resource.setProperty(&quot;url&quot;, &quot;jdbc:mysql://localhost:3306/practice&quot;);
+                    resource.setProperty(&quot;username&quot;, &quot;root&quot;);
+                    resource.setProperty(&quot;password&quot;,&quot;kevin&quot;);
+                    context.getNamingResources().addResource(resource);
+                    super.postProcessContext(context);
+                }
+            };
+            return tomcat;
+        }
+    }</code></pre></li>
+</ol>
+<ol start="3">
+<li><p>JNDI配置的数据源，默认使用 DBCP 的数据库连接池，所以需要添加 DBCP的依赖</p>
+<pre><code>   &lt;dependency&gt;
+        &lt;groupId&gt;org.apache.tomcat&lt;/groupId&gt;
+        &lt;artifactId&gt;tomcat-dbcp&lt;/artifactId&gt;
+        &lt;version&gt;9.0.14&lt;/version&gt;
+        &lt;scope&gt;provided&lt;/scope&gt;
+    &lt;/dependency&gt;</code></pre></li>
+</ol>
+<pre><code>  此时，启动应用，能正确查询数据</code></pre><ul>
+<li><p>使用外置的 <code>servelt</code> 容器，以 <code>Tomcat</code>为例</p>
+<pre><code>如果项目打包成 war， JNDI 配置在 容器里面，则 相对于 上面 使用内置的servlet容器而言，配置更简单
+
+1. 修改 ```application.yml``` 中的配置。同 内置 容器，此处不赘述
+
+2. 在Tomcat的 context.xml 文件内，添加数据源配置
+
+      &lt;Resource 
+           name=&quot;jdbc/practice&quot;
+           auth=&quot;Container&quot; 
+           type=&quot;javax.sql.DataSource&quot; 
+           driverClassName=&quot;com.mysql.jdbc.Driver&quot; 
+           url=&quot;jdbc:mysql://localhost:3306/practice&quot; 
+           username=&quot;mysql&quot; 
+           password=&quot;mysql&quot; 
+           maximumPoolSize=&quot;20&quot; 
+           minimumIdle=&quot;10&quot; 
+           connectionTimeout=&quot;300000&quot;
+      /&gt;</code></pre></li>
+</ul>
+<pre><code>  内置容器有的 JNDIConfig配置，以及 DBCP依赖，都不需要。DBCP依赖不需要是因为Tomcat容器本身提供了这个依赖，在Tomcat安装目录的lib下有。
+
+  启动Tomcat验证。
+
+至于如何将Spring Boot项目打包部署在外部Tomcat容器，参见[http://www.baidu.com](http://www.baidu.com)</code></pre><p>前面有说到，JNDI 配置的数据源，默认使用的是 DBCP 的数据库连接池，虽然 DBCP2.0 后性能有了极大提升，但是从网上各种资料可以得知，目前性能最好的数据库连接池是 hikariCP，其次是 Druid，并且 Spring Boot默认使用的连接池其实也是 hikariCP，所以我们需要能替换 JNDI 对应的数据库连接池。</p>
+<ol>
+<li><p>引入 hikariCP 依赖</p>
+<pre><code> &lt;dependency&gt;
+     &lt;groupId&gt;com.zaxxer&lt;/groupId&gt;
+        &lt;artifactId&gt;HikariCP&lt;/artifactId&gt;
+        &lt;version&gt;3.3.0&lt;/version&gt;
+    &lt;/dependency&gt;</code></pre></li>
+</ol>
+<ol start="2">
+<li><p>配置 JNDI 资源的 factory 属性为 HikariJNDIFactory</p>
+<blockquote>
+<p>即添加 <code>factory=&quot;com.zaxxer.hikari.HikariJNDIFactory&quot;</code> 这个配置，告诉JNDI如何获取这个资源，查看 HikariJNDIFactory 源码可知，其原理为 SPI</p>
+</blockquote>
+<pre><code>    &lt;Resource 
+            name=&quot;jdbc/practice&quot; 
+            factory=&quot;com.zaxxer.hikari.HikariJNDIFactory&quot;
+            auth=&quot;Container&quot; 
+            type=&quot;javax.sql.DataSource&quot;
+            maximumPoolSize=&quot;20&quot; 
+            minimumIdle=&quot;10&quot; 
+            connectionTimeout=&quot;300000&quot;
+            driverClassName=&quot;com.mysql.jdbc.Driver&quot; 
+            jdbcUrl=&quot;jdbc:mysql://localhost:3306/practice&quot;
+            username=&quot;mysql&quot; 
+            password=&quot;mysql&quot;
+        /&gt;</code></pre></li>
+</ol>
+<ol start="3">
+<li>请注意，上述的 Resource 配置跟前面的还有个不一样的地方，默认情况下使用的是  <code>url=&quot;jdbc:mysql://localhost:3306/practice&quot;</code>，而在使用 hikariCP 连接池时，该属性需要调整为 <code>jdbcUrl=&quot;jdbc:mysql://localhost:3306/practice&quot;</code>。否则，将获取不到 JNDI 数据源</li>
+<li>如果是，使用内置的容器，则需要在对应数据库信息配置的地方，添加一个factory属性和修改url属性。</li>
+<li>启动应用，验证。</li>
+</ol>
+</section>
+
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/2019/07/13/aboutme.html">
+        <span class="nav-arrow">← </span>
+        
+          关于我
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/2019/07/15/springboot-with-mysql.html">
+        
+          SpringBoot集成Mysql
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    <!--
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">若你觉得我的文章对你有帮助，欢迎点击上方按钮对我打赏</p>
+      </div>
+    -->
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    <!--
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    -->
+    <!-- 二维码 END -->
+    
+      <!-- No Comment -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    /**var url = 'http://localhost:4000/2019/07/13/springboot-with-jndi.html';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')；*/
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2019 | WellMan 
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("/js/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<!--<script>
+  $('pre code').each(function(i, block) {
+    //hljs.highlightBlock(block);
+    var lines = $(this).text().split('\n').length - 1;
+    var $numbering = $('<ul/>').addClass('pre-numbering');
+    $(this)
+      .addClass('has-numbering')
+      .parent()
+      .append($numbering);
+    for(i=1;i<=lines;i++){
+      $numbering.append($('<li/>').text(i));
+    }
+  });
+</script>-->
+
+<!-- 代码高亮 -->
+<script>hljs.initHighlightingOnLoad();</script>
+<!--<script>
+  var hasLine = 'false';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>-->
+<!-- Baidu Tongji -->
+
+<script src="/js/script.js"></script>
+  </body>
+</html>

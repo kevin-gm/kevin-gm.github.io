@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html>
+  <head><meta name="generator" content="Hexo 3.9.0">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="浮沉中的沙砾">
+  <meta name="keyword" content="WellMan Java">
+  
+    <link rel="shortcut icon" type="image/ico" href="/images/favicon.ico">
+  
+  <title>
+    
+      CentOS7忘记root密码 | WellMan
+    
+  </title>
+  <link href="/css/font-awesome.min.css" rel="stylesheet">
+  <link href="/css/nprogress.min.css" rel="stylesheet">
+  <!-- <link href="/css/agate.css" rel="stylesheet"> -->
+  <link href="/css/railscasts.css" rel="stylesheet">
+  <!--<link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/normal.min.css" rel="stylesheet">-->
+  <link rel="stylesheet" href="/css/style.css">
+  
+  <script src="/js/jquery.min.js"></script>
+  <script src="/js/geopattern.min.js"></script>
+  <script src="/js/nprogress.min.js"></script>
+  <script src="/js/highlight.min.js"></script>
+  
+    <script src="/js/qrious.js"></script>
+  
+  
+  
+  
+    <!-- MathJax support START -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <!-- <script type="text/javascript" src="/js/MathJax.js"></script> -->
+    <!-- MathJax support END -->
+  
+
+
+</head>
+<!--<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>-->
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <img src="/images/wellman.png" width="120px" height="40px"/>
+    </a>
+    <ul class="left-list">
+      
+        <li class="list-item">
+          <i class="fa fa-home"></i>
+          
+            <a href="/" class="item-link">首页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          <i class="fa fa-tags"></i>
+          
+            <a href="/tags" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          <i class="fa fa-archive"></i>
+          
+            <a href="/archives" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          <i class="fa fa-address-card"></i>
+          
+            <a href="/about" class="item-link">关于</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">首页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about" class="menu-link">关于</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <!--<div id="article-banner">
+  <h2>CentOS7忘记root密码</h2>
+  <p class="post-date">2019-07-18</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>-->
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <header>
+        <h2>CentOS7忘记root密码</h2>
+        <p class="post-ref">
+          <span class="post-date">
+            <i class="fa fa-calendar"></i>
+            2019-07-18
+          </span>
+          <span>
+              
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                  <span class="fa fa-tags">标签</span>
+                  
+  <a href="/tags#linux" >
+    <span class="tag-code">linux</span>
+  </a>
+
+  <a href="/tags#centos" >
+    <span class="tag-code">centos</span>
+  </a>
+
+              
+          </span>
+        </p>
+    </header>
+    <section class="markdown-content"><p>自己的机器是windows的，平时会在机器上通过虚拟机运行linux系统进行学习，但是蛋疼的是，一段事件后，当时设置的root密码毫无印象，网上找到了一种方式，这里记录一二。</p>
+<p>虽然忘记了密码，但是系统还是可以启动的，要重置密码，也必须先启动系统。</p>
+<p>启动时，在如下图的引导页面按下 e 键，进入图二</p>
+<blockquote>
+<p>请注意，这个界面一般停留时间短暂，拿出单身二十年的手速</p>
+</blockquote>
+<p><img src="/2019/07/19/centos7-forget-root-passwd/pic-2.jpg" alt></p>
+<p>在图二界面通过方向键向下移动光标，找到标红位置。<br><img src="/2019/07/19/centos7-forget-root-passwd/pic-3.jpg" alt></p>
+<p>改写启动数据，将 <strong>ro</strong> 替换为 <strong>rw init=/sysroot/bin/sh</strong></p>
+<p>修改完之后，按下 <code>ctrl+x</code> 键启动系统</p>
+<p>启动成功后，会进入如下界面<br><img src="/2019/07/19/centos7-forget-root-passwd/pic-4.jpg" alt></p>
+<p>此时，输入 <code>chroot /sysroot</code> 回车，不会有任何提示，</p>
+<p>然后，输入 <code>passwd root</code> 修改root用户密码，注意密码不会显示。看到提示修改成功即可</p>
+<blockquote>
+<p>下图，我首先在没有输入 chroot的情况下修改密码，提示 passwd命令不存在。</p>
+</blockquote>
+<p><img src="/2019/07/19/centos7-forget-root-passwd/pic-5.jpg" alt></p>
+<p>之后，强制重启(可以直接关闭虚拟机)</p>
+</section>
+
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/2019/07/17/install-docker-on-centos7.html">
+        <span class="nav-arrow">← </span>
+        
+          在CentOS7上安装docker
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/2019/07/20/centos7-network-install.html">
+        
+          CentOS7网络设置
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    <!--
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">若你觉得我的文章对你有帮助，欢迎点击上方按钮对我打赏</p>
+      </div>
+    -->
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    <!--
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    -->
+    <!-- 二维码 END -->
+    
+      <!-- No Comment -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    /**var url = 'http://localhost:4000/2019/07/19/centos7-forget-root-passwd.html';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')；*/
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2019 | WellMan 
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("/js/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<!--<script>
+  $('pre code').each(function(i, block) {
+    //hljs.highlightBlock(block);
+    var lines = $(this).text().split('\n').length - 1;
+    var $numbering = $('<ul/>').addClass('pre-numbering');
+    $(this)
+      .addClass('has-numbering')
+      .parent()
+      .append($numbering);
+    for(i=1;i<=lines;i++){
+      $numbering.append($('<li/>').text(i));
+    }
+  });
+</script>-->
+
+<!-- 代码高亮 -->
+<script>hljs.initHighlightingOnLoad();</script>
+<!--<script>
+  var hasLine = 'false';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>-->
+<!-- Baidu Tongji -->
+
+<script src="/js/script.js"></script>
+  </body>
+</html>

@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html>
+  <head><meta name="generator" content="Hexo 3.9.0">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="浮沉中的沙砾">
+  <meta name="keyword" content="WellMan Java">
+  
+    <link rel="shortcut icon" type="image/ico" href="/images/favicon.ico">
+  
+  <title>
+    
+      WellMan
+    
+  </title>
+  <link href="/css/font-awesome.min.css" rel="stylesheet">
+  <link href="/css/nprogress.min.css" rel="stylesheet">
+  <!-- <link href="/css/agate.css" rel="stylesheet"> -->
+  <link href="/css/railscasts.css" rel="stylesheet">
+  <!--<link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/normal.min.css" rel="stylesheet">-->
+  <link rel="stylesheet" href="/css/style.css">
+  
+  <script src="/js/jquery.min.js"></script>
+  <script src="/js/geopattern.min.js"></script>
+  <script src="/js/nprogress.min.js"></script>
+  <script src="/js/highlight.min.js"></script>
+  
+    <script src="/js/qrious.js"></script>
+  
+  
+  
+  
+    <!-- MathJax support START -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <!-- <script type="text/javascript" src="/js/MathJax.js"></script> -->
+    <!-- MathJax support END -->
+  
+
+
+</head>
+<!--<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>-->
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <img src="/images/wellman.png" width="120px" height="40px"/>
+    </a>
+    <ul class="left-list">
+      
+        <li class="list-item">
+          <i class="fa fa-home"></i>
+          
+            <a href="/" class="item-link active">首页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          <i class="fa fa-tags"></i>
+          
+            <a href="/tags" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          <i class="fa fa-archive"></i>
+          
+            <a href="/archives" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          <i class="fa fa-address-card"></i>
+          
+            <a href="/about" class="item-link">关于</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link mobile-active">首页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about" class="menu-link">关于</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <main class="app-body">
+  
+    <article class="article-card">
+      <header>
+        <!-- 标签这有且只能显示一个 -->
+        
+          <a class="cat-link" href="/categories/linux/">linux</a>
+          
+        <h2 class="article-head">
+            <a href="/2019/07/20/centos7-network-install.html">CentOS7网络设置</a>
+          </h2>
+      </header>
+      <p>
+        <span class="article-date">
+            <i class="fa fa-calendar"></i>
+            2019-07-19
+        </span>
+        <span>
+            
+              
+  <a href="/tags#linux" >
+    <span class="tag-code">linux</span>
+  </a>
+
+  <a href="/tags#centos7" >
+    <span class="tag-code">centos7</span>
+  </a>
+
+  <a href="/tags#network" >
+    <span class="tag-code">network</span>
+  </a>
+
+  <a href="/tags#yum" >
+    <span class="tag-code">yum</span>
+  </a>
+
+  <a href="/tags#vim" >
+    <span class="tag-code">vim</span>
+  </a>
+
+            
+        </span>
+      </p>
+      
+      <div class="article-summary">
+        
+          某日，在虚拟机上安装CentOS7，想要安装某些软件时，系统提示无法解析下载地址
+原来，mini版的centos7默认时没有网络的，也没有安装ifconfig软件，这些都是本文要实现的。
+网络设置这里由于是自己玩的虚拟机，不同的IP可能有不同的用途，所以这里实现的是静态网络设置
+首先，查看本 ...
+        
+      </div>
+      <div class="read-more">
+        <a class="more" href="/2019/07/20/centos7-network-install.html">阅读全文</a>
+      </div>
+    </article>
+  
+    <article class="article-card">
+      <header>
+        <!-- 标签这有且只能显示一个 -->
+        
+          <a class="cat-link" href="/categories/linux/">linux</a>
+          
+        <h2 class="article-head">
+            <a href="/2019/07/19/centos7-forget-root-passwd.html">CentOS7忘记root密码</a>
+          </h2>
+      </header>
+      <p>
+        <span class="article-date">
+            <i class="fa fa-calendar"></i>
+            2019-07-18
+        </span>
+        <span>
+            
+              
+  <a href="/tags#linux" >
+    <span class="tag-code">linux</span>
+  </a>
+
+  <a href="/tags#centos" >
+    <span class="tag-code">centos</span>
+  </a>
+
+            
+        </span>
+      </p>
+      
+      <div class="article-summary">
+        
+          自己的机器是windows的，平时会在机器上通过虚拟机运行linux系统进行学习，但是蛋疼的是，一段事件后，当时设置的root密码毫无印象，网上找到了一种方式，这里记录一二。
+虽然忘记了密码，但是系统还是可以启动的，要重置密码，也必须先启动系统。
+启动时，在如下图的引导页面按下 e 键，进入 ...
+        
+      </div>
+      <div class="read-more">
+        <a class="more" href="/2019/07/19/centos7-forget-root-passwd.html">阅读全文</a>
+      </div>
+    </article>
+  
+    <article class="article-card">
+      <header>
+        <!-- 标签这有且只能显示一个 -->
+        
+          <a class="cat-link" href="/categories/docker/">docker</a>
+          
+        <h2 class="article-head">
+            <a href="/2019/07/17/install-docker-on-centos7.html">在CentOS7上安装docker</a>
+          </h2>
+      </header>
+      <p>
+        <span class="article-date">
+            <i class="fa fa-calendar"></i>
+            2019-07-16
+        </span>
+        <span>
+            
+              
+  <a href="/tags#docker" >
+    <span class="tag-code">docker</span>
+  </a>
+
+            
+        </span>
+      </p>
+      
+      <div class="article-summary">
+        
+          docker镜像，是基于基础镜像 scratch 一层一层包装而成，可以理解成装饰器模式，外面一层的镜像都包含一个内层的镜像。这是一种UnionFS(联合文件系统)的实现，docker容器之所以轻量，比如基础的centos镜像才200M，是因为它只包含了bootloader以及kernel， ...
+        
+      </div>
+      <div class="read-more">
+        <a class="more" href="/2019/07/17/install-docker-on-centos7.html">阅读全文</a>
+      </div>
+    </article>
+  
+    <article class="article-card">
+      <header>
+        <!-- 标签这有且只能显示一个 -->
+        
+          <a class="cat-link" href="/categories/docker/">docker</a>
+          
+        <h2 class="article-head">
+            <a href="/2019/07/15/docker-introduction.html">docker基本概念</a>
+          </h2>
+      </header>
+      <p>
+        <span class="article-date">
+            <i class="fa fa-calendar"></i>
+            2019-07-15
+        </span>
+        <span>
+            
+              
+  <a href="/tags#docker" >
+    <span class="tag-code">docker</span>
+  </a>
+
+            
+        </span>
+      </p>
+      
+      <div class="article-summary">
+        
+          什么是docekrdocker是基于GO语言开发的云开源容器项目，诞生与2013年。
+其主要目标是”build, ship and run any app, anywhere”，即通过对应用的封装(packaging)， 分发(distribution)，部署(deployment)，运行( ...
+        
+      </div>
+      <div class="read-more">
+        <a class="more" href="/2019/07/15/docker-introduction.html">阅读全文</a>
+      </div>
+    </article>
+  
+    <article class="article-card">
+      <header>
+        <!-- 标签这有且只能显示一个 -->
+        
+          <a class="cat-link" href="/categories/springboot/">springboot</a>
+          
+        <h2 class="article-head">
+            <a href="/2019/07/15/springboot-helloworld.html">SpringBoot之HelloWorld</a>
+          </h2>
+      </header>
+      <p>
+        <span class="article-date">
+            <i class="fa fa-calendar"></i>
+            2019-07-14
+        </span>
+        <span>
+            
+              
+  <a href="/tags#springboot" >
+    <span class="tag-code">springboot</span>
+  </a>
+
+            
+        </span>
+      </p>
+      
+      <div class="article-summary">
+        
+          SpringBoot的简单介绍学习使用一项新技术，笔者觉得大致可以分为三个阶段
+
+首先了解这项技术是什么，能解决什么问题
+其次是，通过各种资料，能搭建或使用这项技术
+最后才是如何才能用好，也就是了解原理性的知识。
+
+所以，本文的开头，先来说说笔者眼里的SpringBoot。
+在此之前，我们先 ...
+        
+      </div>
+      <div class="read-more">
+        <a class="more" href="/2019/07/15/springboot-helloworld.html">阅读全文</a>
+      </div>
+    </article>
+  
+    <article class="article-card">
+      <header>
+        <!-- 标签这有且只能显示一个 -->
+        
+          <a class="cat-link" href="/categories/springboot/">springboot</a>
+          
+        <h2 class="article-head">
+            <a href="/2019/07/15/springboot-with-mysql.html">SpringBoot集成Mysql</a>
+          </h2>
+      </header>
+      <p>
+        <span class="article-date">
+            <i class="fa fa-calendar"></i>
+            2019-07-14
+        </span>
+        <span>
+            
+              
+  <a href="/tags#springboot" >
+    <span class="tag-code">springboot</span>
+  </a>
+
+  <a href="/tags#mysql" >
+    <span class="tag-code">mysql</span>
+  </a>
+
+            
+        </span>
+      </p>
+      
+      <div class="article-summary">
+        
+          前面我们写了一个入门级的springboot应用，在实际的开发中，数据是保存在数据库的，需要
+
+        
+      </div>
+      <div class="read-more">
+        <a class="more" href="/2019/07/15/springboot-with-mysql.html">阅读全文</a>
+      </div>
+    </article>
+  
+    <article class="article-card">
+      <header>
+        <!-- 标签这有且只能显示一个 -->
+        
+          <a class="cat-link" href="/categories/springboot/">springboot</a>
+          
+        <h2 class="article-head">
+            <a href="/2019/07/13/springboot-with-jndi.html">SpringBoot应用集成JNDI数据源</a>
+          </h2>
+      </header>
+      <p>
+        <span class="article-date">
+            <i class="fa fa-calendar"></i>
+            2019-07-13
+        </span>
+        <span>
+            
+              
+  <a href="/tags#springboot" >
+    <span class="tag-code">springboot</span>
+  </a>
+
+  <a href="/tags#jndi" >
+    <span class="tag-code">jndi</span>
+  </a>
+
+            
+        </span>
+      </p>
+      
+      <div class="article-summary">
+        
+          本文的目标是：在SpringBoot应用中使用JNDI作为应用的数据源。
+SpringBoot项目可以很方便的集成数据源，一般我们只需要如下几个步骤：
+引入相关依赖
+&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework.boot& ...
+        
+      </div>
+      <div class="read-more">
+        <a class="more" href="/2019/07/13/springboot-with-jndi.html">阅读全文</a>
+      </div>
+    </article>
+  
+    <article class="article-card">
+      <header>
+        <!-- 标签这有且只能显示一个 -->
+        
+              <a href="javascript: void(0);" class="cat">未分类</a>
+          
+        <h2 class="article-head">
+            <a href="/2019/07/13/aboutme.html">关于我</a>
+          </h2>
+      </header>
+      <p>
+        <span class="article-date">
+            <i class="fa fa-calendar"></i>
+            2019-07-13
+        </span>
+        <span>
+            
+        </span>
+      </p>
+      
+      <div class="article-summary">
+        
+          听过道理，却依旧过不好这一生，是因为道理不是自己的。
+我是个好人。
+
+        
+      </div>
+      <div class="read-more">
+        <a class="more" href="/2019/07/13/aboutme.html">阅读全文</a>
+      </div>
+    </article>
+  
+
+  
+</main>
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2019 | WellMan 
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("/js/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<!--<script>
+  $('pre code').each(function(i, block) {
+    //hljs.highlightBlock(block);
+    var lines = $(this).text().split('\n').length - 1;
+    var $numbering = $('<ul/>').addClass('pre-numbering');
+    $(this)
+      .addClass('has-numbering')
+      .parent()
+      .append($numbering);
+    for(i=1;i<=lines;i++){
+      $numbering.append($('<li/>').text(i));
+    }
+  });
+</script>-->
+
+<!-- 代码高亮 -->
+<script>hljs.initHighlightingOnLoad();</script>
+<!--<script>
+  var hasLine = 'false';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>-->
+<!-- Baidu Tongji -->
+
+<script src="/js/script.js"></script>
+  </body>
+</html>

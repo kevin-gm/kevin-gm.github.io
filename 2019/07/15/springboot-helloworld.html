@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html>
+  <head><meta name="generator" content="Hexo 3.9.0">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="浮沉中的沙砾">
+  <meta name="keyword" content="WellMan Java">
+  
+    <link rel="shortcut icon" type="image/ico" href="/images/favicon.ico">
+  
+  <title>
+    
+      SpringBoot之HelloWorld | WellMan
+    
+  </title>
+  <link href="/css/font-awesome.min.css" rel="stylesheet">
+  <link href="/css/nprogress.min.css" rel="stylesheet">
+  <!-- <link href="/css/agate.css" rel="stylesheet"> -->
+  <link href="/css/railscasts.css" rel="stylesheet">
+  <!--<link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/normal.min.css" rel="stylesheet">-->
+  <link rel="stylesheet" href="/css/style.css">
+  
+  <script src="/js/jquery.min.js"></script>
+  <script src="/js/geopattern.min.js"></script>
+  <script src="/js/nprogress.min.js"></script>
+  <script src="/js/highlight.min.js"></script>
+  
+    <script src="/js/qrious.js"></script>
+  
+  
+  
+  
+    <!-- MathJax support START -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <!-- <script type="text/javascript" src="/js/MathJax.js"></script> -->
+    <!-- MathJax support END -->
+  
+
+
+</head>
+<!--<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>-->
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <img src="/images/wellman.png" width="120px" height="40px"/>
+    </a>
+    <ul class="left-list">
+      
+        <li class="list-item">
+          <i class="fa fa-home"></i>
+          
+            <a href="/" class="item-link">首页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          <i class="fa fa-tags"></i>
+          
+            <a href="/tags" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          <i class="fa fa-archive"></i>
+          
+            <a href="/archives" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          <i class="fa fa-address-card"></i>
+          
+            <a href="/about" class="item-link">关于</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">首页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about" class="menu-link">关于</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <!--<div id="article-banner">
+  <h2>SpringBoot之HelloWorld</h2>
+  <p class="post-date">2019-07-14</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>-->
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <header>
+        <h2>SpringBoot之HelloWorld</h2>
+        <p class="post-ref">
+          <span class="post-date">
+            <i class="fa fa-calendar"></i>
+            2019-07-14
+          </span>
+          <span>
+              
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                  <span class="fa fa-tags">标签</span>
+                  
+  <a href="/tags#springboot" >
+    <span class="tag-code">springboot</span>
+  </a>
+
+              
+          </span>
+        </p>
+    </header>
+    <section class="markdown-content"><h2 id="SpringBoot的简单介绍"><a href="#SpringBoot的简单介绍" class="headerlink" title="SpringBoot的简单介绍"></a>SpringBoot的简单介绍</h2><p>学习使用一项新技术，笔者觉得大致可以分为三个阶段</p>
+<ul>
+<li>首先了解这项技术是什么，能解决什么问题</li>
+<li>其次是，通过各种资料，能搭建或使用这项技术</li>
+<li>最后才是如何才能用好，也就是了解原理性的知识。</li>
+</ul>
+<p>所以，本文的开头，先来说说笔者眼里的SpringBoot。</p>
+<p>在此之前，我们先回忆一下，以前我们搭建一个SpringMVC项目时，需要做些什么工作。在我的记忆里，需要这么几个步骤</p>
+<ul>
+<li>引入依赖。因为是SpringMVC项目，所以有几个基本依赖是必须的：<code>spring-beans,spring-core,spring-context,spring-web,spring-webmvc</code>，以及其他必须的依赖。</li>
+<li>spring配置文件的定义和配置。默认是classpath下的<code>applicationContext.xml</code>，可以自己重命名并且放到其他路径下，这个文件主要是配置需要加载的Bean，可以是 bean 标签配置，也可以配置自动挡扫描 component-scan。</li>
+<li>springmvc配置文件的定义和配置。该文件主要是配置与mvc相关的，比如<strong>controller的包，viewResolver，messageConverter</strong>等等。</li>
+<li>还需要配置<code>web.xml</code>文件，这里需要指明 spring配置文件，dispatchservlet以及对应springmvc配置文件，spring与servlet容器桥接的contextListener等等。</li>
+<li>最后，历经<strong>千辛万苦</strong>，定义一个controller类，定义一个hello的方法，返回”hello world”字符串，实现我们的HelloWorld</li>
+</ul>
+<p>以上，就是一个简单SpringMVC应用的传统搭建。很明显，只有最后一个步骤，定义HelloWorld方法才是我们真正想要实现的，传统的方式，我们做了大量的辅助工作来支撑环境的运行，看完后面的入门demo，感受会更加深刻。</p>
+<p>SpringBoot的出现，就是为了解决上述问题，将开发人员从各种依赖配置中解放出来，从而能专注于业务需求。SpringBoot可以轻松的创建基于spring的，可以独立运行的生产级项目，其预先定义了很多组件的依赖，并实现其<strong>自动装配</strong>，所以一般只需要一些小改动就可以实际运行。</p>
+<p>总的来说，SpringBoot并不算是一个新的框架，更明确的说，它更像是Spring的高级运用，是基于Spring的一套脚手架。所以，要彻底的了解SpringBoot，需要预先了解Spring才行。</p>
+<h2 id="SpringBoot之HelloWorld"><a href="#SpringBoot之HelloWorld" class="headerlink" title="SpringBoot之HelloWorld"></a>SpringBoot之HelloWorld</h2><p>工具及版本:</p>
+<ul>
+<li>IDEA：2018.2</li>
+<li>JDK： 1.8.0_171</li>
+<li>MAVEN：3.5.3</li>
+<li>spring-boot：2.1.6.RELEASE</li>
+</ul>
+<p><strong>Notice</strong>：请注意，SpringBoot 2.x 之后对应的Spring版本为 5.x，因其大量使用了JDK8的新特性，诸如lambda表达式，stream api等，因此JDK版本必须大于等于1.8。</p>
+<h3 id="使用spring-initializr创建springboot应用"><a href="#使用spring-initializr创建springboot应用" class="headerlink" title="使用spring initializr创建springboot应用"></a>使用spring initializr创建springboot应用</h3><p>使用spring initializr有两种方式，第一种是通过官方提供的<a href="https://start.spring.io/" target="_blank" rel="noopener">控制台</a>，如下图：<br><img src="/2019/07/15/springboot-helloworld/spring-initializr.jpg" alt="spring-initializr"></p>
+<p>这里可以按需选择项目的信息，<code>dependencies</code>可以选择项目的依赖，本demo只需要选择web。</p>
+<p>选择好之后，点击”Generate the project”，控制台将生成并下载项目到本地，解压缩后导入项目到IDEA即可。</p>
+<p>第二种方式是通过IDEA创建。在IDEA的菜单栏，选择 new -&gt; Project，在弹出的界面中，选择左边的 <strong>Spring Initializr</strong>，如图所示：<br><img src="/2019/07/15/springboot-helloworld/spring-initializr-idea.jpg" alt="spring-initializr"></p>
+<p>稍微要注意的是JDK的版本至少需要1.8，可以看到，这里的服务地址实际还是使用的官方的控制台，只不过在IDEA创建，不需要额外的下载导入步骤。点击 next，选择所需要的依赖，同样，我们只选择web，点击 finish，静等项目创建完毕。</p>
+<p>通过创建的项目，其 <code>pom.xml</code>文件内容如下：</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+    xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
+    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+    &lt;parent&gt;
+        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt;
+        &lt;version&gt;2.1.6.RELEASE&lt;/version&gt;
+        &lt;relativePath/&gt; &lt;!-- lookup parent from repository --&gt;
+    &lt;/parent&gt;
+    &lt;groupId&gt;site.wellman.study&lt;/groupId&gt;
+    &lt;artifactId&gt;springboot&lt;/artifactId&gt;
+    &lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;
+    &lt;name&gt;springboot&lt;/name&gt;
+    &lt;description&gt;Demo project for Spring Boot&lt;/description&gt;
+
+    &lt;properties&gt;
+        &lt;java.version&gt;1.8&lt;/java.version&gt;
+    &lt;/properties&gt;
+
+    &lt;dependencies&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-starter-test&lt;/artifactId&gt;
+            &lt;scope&gt;test&lt;/scope&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+
+    &lt;build&gt;
+        &lt;plugins&gt;
+            &lt;plugin&gt;
+                &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+                &lt;artifactId&gt;spring-boot-maven-plugin&lt;/artifactId&gt;
+            &lt;/plugin&gt;
+        &lt;/plugins&gt;
+    &lt;/build&gt;
+
+&lt;/project&gt;</code></pre><p>注意，前面的pom文件，是指定了父pom为<code>spring-boot-starter-parent</code>，所以后面的依赖可以不指定版本。</p>
+<h3 id="通过普通的maven项目创建springboot应用"><a href="#通过普通的maven项目创建springboot应用" class="headerlink" title="通过普通的maven项目创建springboot应用"></a>通过普通的maven项目创建springboot应用</h3><p>直接通过<strong>Spring Initializr</strong>很方便，能直接按需选择所需的依赖，但每次创建都会是一个新的 Project，在实际的开发过程中，通常都是一个父Project，下面包含多个子module，下面我们通过这种方式来新建一个springboot应用。</p>
+<p>首先，通过IDEA新建一个普通的maven项目，其<code>pom.xml</code>文件配置如下：</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;
+         xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+         xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
+    &lt;parent&gt;
+        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt;
+        &lt;version&gt;2.1.6.RELEASE&lt;/version&gt;
+    &lt;/parent&gt;
+    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+
+    &lt;groupId&gt;site.wellman.study&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-boot&lt;/artifactId&gt;
+    &lt;packaging&gt;pom&lt;/packaging&gt;
+    &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;
+    &lt;modules&gt;
+        &lt;module&gt;HelloWorld&lt;/module&gt;
+    &lt;/modules&gt;
+
+    &lt;build&gt;
+        &lt;plugins&gt;
+            &lt;plugin&gt;
+                &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+                &lt;artifactId&gt;spring-boot-maven-plugin&lt;/artifactId&gt;
+            &lt;/plugin&gt;
+        &lt;/plugins&gt;
+    &lt;/build&gt;
+&lt;/project&gt;</code></pre><p>当然，一般我们会将父project项目设定为顶层项目，不希望在父project项目中还引入parent标签，此时我们可以调整<code>pom.xml</code>为：</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;
+         xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+         xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
+
+    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+
+    &lt;groupId&gt;site.wellman.study&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-boot&lt;/artifactId&gt;
+    &lt;packaging&gt;pom&lt;/packaging&gt;
+    &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;
+    &lt;modules&gt;
+        &lt;module&gt;HelloWorld&lt;/module&gt;
+    &lt;/modules&gt;
+
+    &lt;dependencyManagement&gt;
+        &lt;dependencies&gt;
+            &lt;dependency&gt;
+                &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+                &lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt;
+                &lt;version&gt;2.1.6.RELEASE&lt;/version&gt;
+                &lt;type&gt;pom&lt;/type&gt;
+                &lt;scope&gt;import&lt;/scope&gt;
+            &lt;/dependency&gt;
+        &lt;/dependencies&gt;
+    &lt;/dependencyManagement&gt;
+&lt;/project&gt;</code></pre><p>通过 <code>dependencyManagement</code>来引入<code>spring-boot-starter-parent</code></p>
+<p>新建好父project后，然后在父project下新建子模块，也是一个普通的maven项目，配置其<code>pom.xml</code></p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;
+         xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+         xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
+    &lt;parent&gt;
+        &lt;artifactId&gt;spring-boot&lt;/artifactId&gt;
+        &lt;groupId&gt;site.wellman.study&lt;/groupId&gt;
+        &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;
+    &lt;/parent&gt;
+    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+
+    &lt;artifactId&gt;HelloWorld&lt;/artifactId&gt;
+
+    &lt;dependencies&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+
+&lt;/project&gt;</code></pre><p>我们的目标是一个HelloWorld级的SpringMVC应用，所以只需要引入<code>spring-boot-starter-web</code></p>
+<p>编写启动类代码以及controller，代码如下：</p>
+<pre><code>package site.wellman.study.springboot;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@SpringBootApplication
+@RestController
+public class HelloWorldApplication {
+
+    @GetMapping(&quot;/hello&quot;)
+    public String hello() {
+        return &quot;hello world&quot;;
+    }
+
+    public static void main(String[] args) {
+        SpringApplication.run(HelloWorldApplication.class, args);
+    }
+}</code></pre><p>最后，启动<code>main</code>方法，应用默认已 <strong>8080</strong>端口启动，访问controller <a href="http://localhost:8080/hello">http://localhost:8080/hello</a> 显示返回的字符串”hello world”</p>
+<p>总结来看，当使用springboot构建SpringMVC项目时，我们仅需要引入<code>spring-boot-starter-*</code>依赖，然后编写启动类即可。</p>
+<h3 id="使用springboot-cli创建springboot应用"><a href="#使用springboot-cli创建springboot应用" class="headerlink" title="使用springboot cli创建springboot应用"></a>使用springboot cli创建springboot应用</h3><p>因为个人习惯，这种方式也只看过资料，没有实践过，所以这里不做讨论，有兴趣的可以看看官网资料。</p>
+</section>
+
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/2019/07/15/springboot-with-mysql.html">
+        <span class="nav-arrow">← </span>
+        
+          SpringBoot集成Mysql
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/2019/07/15/docker-introduction.html">
+        
+          docker基本概念
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    <!--
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">若你觉得我的文章对你有帮助，欢迎点击上方按钮对我打赏</p>
+      </div>
+    -->
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    <!--
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    -->
+    <!-- 二维码 END -->
+    
+      <!-- No Comment -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    /**var url = 'http://localhost:4000/2019/07/15/springboot-helloworld.html';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')；*/
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2019 | WellMan 
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("/js/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<!--<script>
+  $('pre code').each(function(i, block) {
+    //hljs.highlightBlock(block);
+    var lines = $(this).text().split('\n').length - 1;
+    var $numbering = $('<ul/>').addClass('pre-numbering');
+    $(this)
+      .addClass('has-numbering')
+      .parent()
+      .append($numbering);
+    for(i=1;i<=lines;i++){
+      $numbering.append($('<li/>').text(i));
+    }
+  });
+</script>-->
+
+<!-- 代码高亮 -->
+<script>hljs.initHighlightingOnLoad();</script>
+<!--<script>
+  var hasLine = 'false';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>-->
+<!-- Baidu Tongji -->
+
+<script src="/js/script.js"></script>
+  </body>
+</html>
