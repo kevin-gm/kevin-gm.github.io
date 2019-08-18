@@ -10,7 +10,7 @@
   
   <title>
     
-      SpringBoot应用集成JNDI数据源 | WellMan
+      使用IDEA管理数据库 | WellMan
     
   </title>
   <link href="/css/font-awesome.min.css" rel="stylesheet">
@@ -134,8 +134,8 @@
 </header>
 
     <!--<div id="article-banner">
-  <h2>SpringBoot应用集成JNDI数据源</h2>
-  <p class="post-date">2019-07-13</p>
+  <h2>使用IDEA管理数据库</h2>
+  <p class="post-date">2019-08-18</p>
   <div class="arrow-down">
     <a href="javascript:;"></a>
   </div>
@@ -144,163 +144,49 @@
   <!-- Article START -->
   <article class="post-article">
     <header>
-        <h2>SpringBoot应用集成JNDI数据源</h2>
+        <h2>使用IDEA管理数据库</h2>
         <p class="post-ref">
           <span class="post-date">
             <i class="fa fa-calendar"></i>
-            2019-07-13
+            2019-08-18
           </span>
           <span>
               
                 &nbsp;&nbsp;&nbsp;&nbsp;
                   <span class="fa fa-tags">标签</span>
                   
-  <a href="/tags#springboot" >
-    <span class="tag-code">springboot</span>
+  <a href="/tags#IDEA" >
+    <span class="tag-code">IDEA</span>
   </a>
 
-  <a href="/tags#jndi" >
-    <span class="tag-code">jndi</span>
+  <a href="/tags#Database" >
+    <span class="tag-code">Database</span>
   </a>
 
               
           </span>
         </p>
     </header>
-    <section class="markdown-content"><p>本文的目标是：在SpringBoot应用中使用JNDI作为应用的数据源。</p>
-<p>SpringBoot项目可以很方便的集成数据源，一般我们只需要如下几个步骤：</p>
-<p>引入相关依赖</p>
-<pre><code>&lt;dependency&gt;
-    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
-    &lt;artifactId&gt;spring-boot-starter-jdbc&lt;/artifactId&gt;
-    &lt;version&gt;**&lt;/version&gt;
-&lt;/dependency&gt;
-&lt;dependency&gt;
-    &lt;groupId&gt;mysql&lt;/groupId&gt;
-    &lt;artifactId&gt;mysql-connector-java&lt;/artifactId&gt;
-    &lt;version&gt;**&lt;/version&gt;
-&lt;/dependency&gt;</code></pre><p>在 application.yml 中设置数据库地址以及相关连接参数</p>
-<pre><code>spring:
-  datasource:
-    url: jdbc:mysql://localhost:3306/practice
-    driver-class-name: com.mysql.jdbc.Driver
-    username: mysql
-    password: mysql</code></pre><p>此时，就可以使用JDBC查询数据库。</p>
-<p>可以看到，上面的数据库连接信息直接配置在了 <code>application.yml</code> 这个配置文件中，这样做很不安全。</p>
-<p>当然，我们可以引入<strong>配置中心</strong>，将数据库连接信息配置在配置中心，并且对相关内容进行加密。</p>
-<p>不过，很多时候，很多公司，更习惯于将数据库连接信息统一配置在 应用服务器(比如Tomcat)，由系统运维人员统一对应用服务器和数据库进行管理，此时我们就需要用到 JNDI。</p>
-<p>Spring Boot为我们做了很多事，所以其使用JNDI获取数据源依旧很简单，我们分两种情况说明：</p>
-<ul>
-<li><p>使用内置的 <code>servlet</code> 容器 ，以默认的 <code>Tomcat</code>为例</p>
-<ol>
-<li><p>修改 <code>application.yml</code> 中的配置，<code>spring.datasource</code> 此时只需要唯一配置 <code>jndi-name</code></p>
-<pre><code>&gt; jndi-name 的值，可以是 ```java:/comp/env/jdbc/practice```，也可以是 ```jdbc/practice```，Spring Boot在解析参数时，如果没有前缀，会自动补上
-
-   spring:
-        datasource:
-        jndi-name: java:/comp/env/jdbc/practice</code></pre></li>
-</ol>
-</li>
+    <section class="markdown-content"><h3 id="前置条件"><a href="#前置条件" class="headerlink" title="前置条件"></a>前置条件</h3><ul>
+<li>IDEA 2019.2</li>
+<li>本机已安装Mysql数据库</li>
+<li>Mysql 5.7</li>
 </ul>
-<ol start="2">
-<li><p>添加 JNDI 的配置代码。JNDI本来应该配置在 JBOSS或者Tomcat这些容器里面，而这里我们使用的时内置容器，无法直接在容器里面配置，所以需要通过编码的方式添加 JNDI 信息</p>
-<pre><code>   @Configuration
-    public class JndiConfig {
-
-        @Bean
-        public ServletWebServerFactory servletContainer() {
-            TomcatServletWebServerFactory tomcat = new TomcatServletWebServerFactory() {
-                @Override
-                protected TomcatWebServer getTomcatWebServer(Tomcat tomcat) {
-                    // 内置容器默认禁用了 命名服务，此处必须要启用
-                    tomcat.enableNaming();
-                    return super.getTomcatWebServer(tomcat);
-                }
-                @Override
-                protected void postProcessContext(Context context) {
-                    // 在JNDI里，资源抽象为了 Resouce，此处是配置数据库连接信息
-                    ContextResource resource = new ContextResource();
-                    resource.setName(&quot;jdbc/practice&quot;);
-                    resource.setType(DataSource.class.getName());
-                    resource.setProperty(&quot;driverClassName&quot;, &quot;com.mysql.jdbc.Driver&quot;);
-                    resource.setProperty(&quot;url&quot;, &quot;jdbc:mysql://localhost:3306/practice&quot;);
-                    resource.setProperty(&quot;username&quot;, &quot;root&quot;);
-                    resource.setProperty(&quot;password&quot;,&quot;kevin&quot;);
-                    context.getNamingResources().addResource(resource);
-                    super.postProcessContext(context);
-                }
-            };
-            return tomcat;
-        }
-    }</code></pre></li>
-</ol>
-<ol start="3">
-<li><p>JNDI配置的数据源，默认使用 DBCP 的数据库连接池，所以需要添加 DBCP的依赖</p>
-<pre><code>   &lt;dependency&gt;
-        &lt;groupId&gt;org.apache.tomcat&lt;/groupId&gt;
-        &lt;artifactId&gt;tomcat-dbcp&lt;/artifactId&gt;
-        &lt;version&gt;9.0.14&lt;/version&gt;
-        &lt;scope&gt;provided&lt;/scope&gt;
-    &lt;/dependency&gt;</code></pre></li>
-</ol>
-<pre><code>  此时，启动应用，能正确查询数据</code></pre><ul>
-<li><p>使用外置的 <code>servelt</code> 容器，以 <code>Tomcat</code>为例</p>
-<pre><code>如果项目打包成 war， JNDI 配置在 容器里面，则 相对于 上面 使用内置的servlet容器而言，配置更简单
-
-1. 修改 ```application.yml``` 中的配置。同 内置 容器，此处不赘述
-
-2. 在Tomcat的 context.xml 文件内，添加数据源配置
-
-      &lt;Resource 
-           name=&quot;jdbc/practice&quot;
-           auth=&quot;Container&quot; 
-           type=&quot;javax.sql.DataSource&quot; 
-           driverClassName=&quot;com.mysql.jdbc.Driver&quot; 
-           url=&quot;jdbc:mysql://localhost:3306/practice&quot; 
-           username=&quot;mysql&quot; 
-           password=&quot;mysql&quot; 
-           maximumPoolSize=&quot;20&quot; 
-           minimumIdle=&quot;10&quot; 
-           connectionTimeout=&quot;300000&quot;
-      /&gt;</code></pre></li>
-</ul>
-<pre><code>  内置容器有的 JNDIConfig配置，以及 DBCP依赖，都不需要。DBCP依赖不需要是因为Tomcat容器本身提供了这个依赖，在Tomcat安装目录的lib下有。
-
-  启动Tomcat验证。
-
-至于如何将Spring Boot项目打包部署在外部Tomcat容器，参见[http://www.baidu.com](http://www.baidu.com)</code></pre><p>前面有说到，JNDI 配置的数据源，默认使用的是 DBCP 的数据库连接池，虽然 DBCP2.0 后性能有了极大提升，但是从网上各种资料可以得知，目前性能最好的数据库连接池是 hikariCP，其次是 Druid，并且 Spring Boot默认使用的连接池其实也是 hikariCP，所以我们需要能替换 JNDI 对应的数据库连接池。</p>
-<ol>
-<li><p>引入 hikariCP 依赖</p>
-<pre><code> &lt;dependency&gt;
-     &lt;groupId&gt;com.zaxxer&lt;/groupId&gt;
-        &lt;artifactId&gt;HikariCP&lt;/artifactId&gt;
-        &lt;version&gt;3.3.0&lt;/version&gt;
-    &lt;/dependency&gt;</code></pre></li>
-</ol>
-<ol start="2">
-<li><p>配置 JNDI 资源的 factory 属性为 HikariJNDIFactory</p>
-<blockquote>
-<p>即添加 <code>factory=&quot;com.zaxxer.hikari.HikariJNDIFactory&quot;</code> 这个配置，告诉JNDI如何获取这个资源，查看 HikariJNDIFactory 源码可知，其原理为 SPI</p>
-</blockquote>
-<pre><code>    &lt;Resource 
-            name=&quot;jdbc/practice&quot; 
-            factory=&quot;com.zaxxer.hikari.HikariJNDIFactory&quot;
-            auth=&quot;Container&quot; 
-            type=&quot;javax.sql.DataSource&quot;
-            maximumPoolSize=&quot;20&quot; 
-            minimumIdle=&quot;10&quot; 
-            connectionTimeout=&quot;300000&quot;
-            driverClassName=&quot;com.mysql.jdbc.Driver&quot; 
-            jdbcUrl=&quot;jdbc:mysql://localhost:3306/practice&quot;
-            username=&quot;mysql&quot; 
-            password=&quot;mysql&quot;
-        /&gt;</code></pre></li>
-</ol>
-<ol start="3">
-<li>请注意，上述的 Resource 配置跟前面的还有个不一样的地方，默认情况下使用的是  <code>url=&quot;jdbc:mysql://localhost:3306/practice&quot;</code>，而在使用 hikariCP 连接池时，该属性需要调整为 <code>jdbcUrl=&quot;jdbc:mysql://localhost:3306/practice&quot;</code>。否则，将获取不到 JNDI 数据源</li>
-<li>如果是，使用内置的容器，则需要在对应数据库信息配置的地方，添加一个factory属性和修改url属性。</li>
-<li>启动应用，验证。</li>
-</ol>
+<h2 id="使用IDEA连接数据库"><a href="#使用IDEA连接数据库" class="headerlink" title="使用IDEA连接数据库"></a>使用IDEA连接数据库</h2><p>不得不说，IDEA真是开发的利器。</p>
+<p>对于个人学习而言，虽然现在市面上有很多数据库管理工具，比如Navicat，HeidiSQL，SQLyog，Workbench等等，或者直接使用命令行。诸如这些工具，有的界面不好看，有的用得不习惯，我之前用Navicat比较多，也已经习惯了它的界面操作，但后来收费后，每次安装都需要找破解版，十分麻烦。而使用IDEA，直接在开发工具就可以进行数据库操作，方便至极。</p>
+<h4 id="配置数据库连接"><a href="#配置数据库连接" class="headerlink" title="配置数据库连接"></a>配置数据库连接</h4><p>首先找到并进行IDEA连接数据库的配置。如下图所示，一般IDEA默认在右边的侧栏就已经显示了这个操作菜单，如果没有，那就通过顶部导航栏的 <strong>View -&gt; Tool Windows -&gt; Database</strong> 打开配置选项<br><img src="/2019/08/19/idea-database/idea-mysql-pic-1.jpg" alt="a"></p>
+<p>接着，配置数据库连接。如下图所示，点击 <code>+</code> 号(新建按钮)，在 <strong>Data Source</strong> 选项下，选择 <strong>Mysql</strong><br><img src="/2019/08/19/idea-database/idea-mysql-pic-2.jpg" alt="a"></p>
+<p>选择了目标数据源后，就会弹出对应的配置界面。<br><img src="/2019/08/19/idea-database/idea-mysql-pic-3.jpg" alt="a"></p>
+<p>第一次配置的时候，界面底部可能会提示类似于 <em>缺少数据库驱动</em>，需要进行下载。这里要注意的是，驱动必须要与安装的数据库版本匹配，2019.2版本的IDEA下载的时候，默认下载的是Mysql8的驱动，这个时候如果安装的Mysql版本没有这么高，则会连接失败。</p>
+<p>这里，本人安装的Mysql是5.7的，下载的数据库驱动为5.1.47，能连接成功</p>
+<p>填写好配置信息后，可以进行连接测试，如果通过，点击确认。</p>
+<h4 id="使用IDEA管理数据库"><a href="#使用IDEA管理数据库" class="headerlink" title="使用IDEA管理数据库"></a>使用IDEA管理数据库</h4><p>配置好后，先看看怎么直接执行SQL命令。</p>
+<p>点击 console 图标，在SQL命令窗口栏输入简单的SQL命令 <code>show databases;</code> 查看效果，如下图所示。</p>
+<p><img src="/2019/08/19/idea-database/idea-mysql-pic-4.jpg" alt="a"></p>
+<p>可以看到，在 Output 一栏显示了当前数据库服务器已经创建好的数据库。</p>
+<p>当然也有图形化界面，在 Database 管理区域，如图所示操作，打开需要使用的数据库 practice<br><img src="/2019/08/19/idea-database/idea-mysql-pic-5.jpg" alt="a"></p>
+<p>选择某一张数据表后，在左侧，会显示数据表当前的数据，可以双击修改数据，然后点击 submit 图标进行提交。</p>
+<p>至于其他操作，可以根据提示慢慢摸索。</p>
 </section>
 
     <!-- NAV START -->
@@ -308,17 +194,17 @@
   <div class="nav-container">
     <!-- reverse left and right to put prev and next in a more logic postition -->
     
-      <a class="nav-left" href="/2019/07/13/aboutme.html">
+      <a class="nav-left" href="/2019/07/20/centos7-network-install.html">
         <span class="nav-arrow">← </span>
         
-          关于我
+          CentOS7网络设置
         
       </a>
     
     
-      <a class="nav-right" href="/2019/07/15/springboot-with-mysql.html">
+      <a class="nav-right" href="/2019/08/19/hexo-general-settings.html">
         
-          SpringBoot集成Mysql
+          Hexo自建博客常用操作
         
         <span class="nav-arrow"> →</span>
       </a>
@@ -366,7 +252,7 @@
 
 <script>
   (function () {
-    /**var url = 'http://localhost:4000/2019/07/13/springboot-with-jndi.html';
+    /**var url = 'http://localhost:4000/2019/08/19/idea-database.html';
     var banner = ''
     if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
       $('#article-banner').css({

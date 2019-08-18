@@ -10,7 +10,7 @@
   
   <title>
     
-      SpringBoot之HelloWorld | WellMan
+      SpringBoot(一):HelloWorld | WellMan
     
   </title>
   <link href="/css/font-awesome.min.css" rel="stylesheet">
@@ -134,8 +134,8 @@
 </header>
 
     <!--<div id="article-banner">
-  <h2>SpringBoot之HelloWorld</h2>
-  <p class="post-date">2019-07-14</p>
+  <h2>SpringBoot(一):HelloWorld</h2>
+  <p class="post-date">2019-07-13</p>
   <div class="arrow-down">
     <a href="javascript:;"></a>
   </div>
@@ -144,11 +144,11 @@
   <!-- Article START -->
   <article class="post-article">
     <header>
-        <h2>SpringBoot之HelloWorld</h2>
+        <h2>SpringBoot(一):HelloWorld</h2>
         <p class="post-ref">
           <span class="post-date">
             <i class="fa fa-calendar"></i>
-            2019-07-14
+            2019-07-13
           </span>
           <span>
               
@@ -189,10 +189,10 @@
 <li>spring-boot：2.1.6.RELEASE</li>
 </ul>
 <p><strong>Notice</strong>：请注意，SpringBoot 2.x 之后对应的Spring版本为 5.x，因其大量使用了JDK8的新特性，诸如lambda表达式，stream api等，因此JDK版本必须大于等于1.8。</p>
-<h3 id="使用spring-initializr创建springboot应用"><a href="#使用spring-initializr创建springboot应用" class="headerlink" title="使用spring initializr创建springboot应用"></a>使用spring initializr创建springboot应用</h3><p>使用spring initializr有两种方式，第一种是通过官方提供的<a href="https://start.spring.io/" target="_blank" rel="noopener">控制台</a>，如下图：<br><img src="/2019/07/15/springboot-helloworld/spring-initializr.jpg" alt="spring-initializr"></p>
+<h3 id="使用spring-initializr创建springboot应用"><a href="#使用spring-initializr创建springboot应用" class="headerlink" title="使用spring initializr创建springboot应用"></a>使用spring initializr创建springboot应用</h3><p>使用spring initializr有两种方式，第一种是通过官方提供的<a href="https://start.spring.io/" target="_blank" rel="noopener">控制台</a>，如下图：<br><img src="/2019/07/14/springboot-helloworld/spring-initializr.jpg" alt="spring-initializr"></p>
 <p>这里可以按需选择项目的信息，<code>dependencies</code>可以选择项目的依赖，本demo只需要选择web。</p>
 <p>选择好之后，点击”Generate the project”，控制台将生成并下载项目到本地，解压缩后导入项目到IDEA即可。</p>
-<p>第二种方式是通过IDEA创建。在IDEA的菜单栏，选择 new -&gt; Project，在弹出的界面中，选择左边的 <strong>Spring Initializr</strong>，如图所示：<br><img src="/2019/07/15/springboot-helloworld/spring-initializr-idea.jpg" alt="spring-initializr"></p>
+<p>第二种方式是通过IDEA创建。在IDEA的菜单栏，选择 new -&gt; Project，在弹出的界面中，选择左边的 <strong>Spring Initializr</strong>，如图所示：<br><img src="/2019/07/14/springboot-helloworld/spring-initializr-idea.jpg" alt="spring-initializr"></p>
 <p>稍微要注意的是JDK的版本至少需要1.8，可以看到，这里的服务地址实际还是使用的官方的控制台，只不过在IDEA创建，不需要额外的下载导入步骤。点击 next，选择所需要的依赖，同样，我们只选择web，点击 finish，静等项目创建完毕。</p>
 <p>通过创建的项目，其 <code>pom.xml</code>文件内容如下：</p>
 <pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
@@ -347,17 +347,17 @@ public class HelloWorldApplication {
   <div class="nav-container">
     <!-- reverse left and right to put prev and next in a more logic postition -->
     
-      <a class="nav-left" href="/2019/07/15/springboot-with-mysql.html">
+      <a class="nav-left" href="/2019/07/13/aboutme.html">
         <span class="nav-arrow">← </span>
         
-          SpringBoot集成Mysql
+          关于我
         
       </a>
     
     
-      <a class="nav-right" href="/2019/07/15/docker-introduction.html">
+      <a class="nav-right" href="/2019/07/15/springboot-with-mysql.html">
         
-          docker基本概念
+          SpringBoot(二):集成Mysql
         
         <span class="nav-arrow"> →</span>
       </a>
@@ -405,7 +405,7 @@ public class HelloWorldApplication {
 
 <script>
   (function () {
-    /**var url = 'http://localhost:4000/2019/07/15/springboot-helloworld.html';
+    /**var url = 'http://localhost:4000/2019/07/14/springboot-helloworld.html';
     var banner = ''
     if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
       $('#article-banner').css({

@@ -180,7 +180,7 @@
         </p>
     </header>
     <section class="markdown-content"><p>某日，在虚拟机上安装CentOS7，想要安装某些软件时，系统提示无法解析下载地址<br><img src="/2019/07/20/centos7-network-install/centos7-pic-1.jpg" alt="spring-initializr"></p>
-<p>原来，mini版的centos7默认时没有网络的，也没有安装ifconfig软件，这些都是本文要实现的。</p>
+<p>原来，mini版的centos7默认是没有网络的，也没有安装ifconfig软件，这些都是本文要实现的。</p>
 <h3 id="网络设置"><a href="#网络设置" class="headerlink" title="网络设置"></a>网络设置</h3><p>这里由于是自己玩的虚拟机，不同的IP可能有不同的用途，所以这里实现的是静态网络设置</p>
 <p>首先，查看本机网卡信息，红色圈出来的是后面需要进行配置的网卡<br><img src="/2019/07/20/centos7-network-install/centos7-pic-2.jpg" alt="spring-initializr"></p>
 <p>查看宿主机的网络信息，打开宿主机的命令行，输入 ipconfig 命令<br><img src="/2019/07/20/centos7-network-install/centos7-pic-3.jpg" alt="spring-initializr"></p>
@@ -215,6 +215,13 @@ DNS1=8.8.8.8</code></pre><p>最终的配置信息如图所示：<br><img src="/2
         
       </a>
     
+    
+      <a class="nav-right" href="/2019/08/19/idea-database.html">
+        
+          使用IDEA管理数据库
+        
+        <span class="nav-arrow"> →</span>
+      </a>
     
   </div>
 

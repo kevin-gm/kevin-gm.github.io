@@ -10,7 +10,7 @@
   
   <title>
     
-      docker基本概念 | WellMan
+      SpringBoot(三):集成JNDI数据源 | WellMan
     
   </title>
   <link href="/css/font-awesome.min.css" rel="stylesheet">
@@ -134,7 +134,7 @@
 </header>
 
     <!--<div id="article-banner">
-  <h2>docker基本概念</h2>
+  <h2>SpringBoot(三):集成JNDI数据源</h2>
   <p class="post-date">2019-07-15</p>
   <div class="arrow-down">
     <a href="javascript:;"></a>
@@ -144,7 +144,7 @@
   <!-- Article START -->
   <article class="post-article">
     <header>
-        <h2>docker基本概念</h2>
+        <h2>SpringBoot(三):集成JNDI数据源</h2>
         <p class="post-ref">
           <span class="post-date">
             <i class="fa fa-calendar"></i>
@@ -155,34 +155,152 @@
                 &nbsp;&nbsp;&nbsp;&nbsp;
                   <span class="fa fa-tags">标签</span>
                   
-  <a href="/tags#docker" >
-    <span class="tag-code">docker</span>
+  <a href="/tags#springboot" >
+    <span class="tag-code">springboot</span>
+  </a>
+
+  <a href="/tags#jndi" >
+    <span class="tag-code">jndi</span>
   </a>
 
               
           </span>
         </p>
     </header>
-    <section class="markdown-content"><h2 id="什么是docekr"><a href="#什么是docekr" class="headerlink" title="什么是docekr"></a>什么是docekr</h2><p>docker是基于GO语言开发的云开源容器项目，诞生与2013年。</p>
-<p>其主要目标是”build, ship and run any app, anywhere”，即通过对应用的封装(packaging)， 分发(distribution)，部署(deployment)，运行(runtime)生命周期进行管理，达到应用组件”一次封装，到处运行”的目的。</p>
-<p>docker来源于linux的容器技术(LXC),在LXC的基础上，docker进一步优化了容器的使用体验，它提供了各种容器管理工具让用户无需关心底层操作，引入分层文件系统构建和高效的镜像机制，降低了迁移的难度。现在新版的docker已不再直接基于LXC</p>
-<h2 id="为什么使用docker"><a href="#为什么使用docker" class="headerlink" title="为什么使用docker"></a>为什么使用docker</h2><p>以Java应用为例，在以前，我们编码完成后，要先在测试环境进行测试，所以我们会将打包好的war包交给运维人员，由他们在测试环境进行部署，测试通过后，也由他们在生产环境进行部署。</p>
-<p>我们常常遇到这样一种情况，同样一个war包，在测试环境运行得好好的，可是一部署到生产环境，应用无法启动，费劲千辛万苦，最终发现测试和生产环境某些配置不一致，更可怕的是，应用可能需要部署到很多台服务器上，这简直就是灾难，也严重影响工作效率。</p>
-<p>而docker，最终提交给运维的是一个包含运行环境的，能直接运行的镜像，不管是在哪里运行，应用的运行环境都是一致的，不再会因为应用的环境问题导致应用无法启动。</p>
-<p>docker与传统虚拟机相比，他的启动更快，对系统的资源需求更少，它不像虚拟机每个都需要分配独占的内存和磁盘等资源，docker共享宿主机的硬件资源。docker有比虚拟机更少的抽象层，由于docker不需要Hypervisor实现硬件资源的虚拟化，运行在docker上的程序使用的都是物理机的硬件资源。</p>
-<h2 id="核心概念"><a href="#核心概念" class="headerlink" title="核心概念"></a>核心概念</h2><h3 id="镜像-image"><a href="#镜像-image" class="headerlink" title="镜像(image)"></a>镜像(image)</h3><p>镜像是创建docker容器的基础，是一种轻量级的，可执行的独立软件包，用来打包软件运行环境和基于运行环境开发的软件，它包含某个软件所需的所有内容，包括代码、运行时、库、环境变量和配置文件。</p>
-<p>docker镜像的底层原理是联合文件系统(UnionFS)，镜像像一个同心圆，一层套着一层。</p>
+    <section class="markdown-content"><p>本文的目标是：在SpringBoot应用中使用JNDI作为应用的数据源。</p>
+<p>SpringBoot项目可以很方便的集成数据源，一般我们只需要如下几个步骤：</p>
+<p>引入相关依赖</p>
+<pre><code>&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-boot-starter-jdbc&lt;/artifactId&gt;
+    &lt;version&gt;**&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;mysql&lt;/groupId&gt;
+    &lt;artifactId&gt;mysql-connector-java&lt;/artifactId&gt;
+    &lt;version&gt;**&lt;/version&gt;
+&lt;/dependency&gt;</code></pre><p>在 application.yml 中设置数据库地址以及相关连接参数</p>
+<pre><code>spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/practice
+    driver-class-name: com.mysql.jdbc.Driver
+    username: mysql
+    password: mysql</code></pre><p>此时，就可以使用JDBC查询数据库。</p>
+<p>可以看到，上面的数据库连接信息直接配置在了 <code>application.yml</code> 这个配置文件中，这样做很不安全。</p>
+<p>当然，我们可以引入<strong>配置中心</strong>，将数据库连接信息配置在配置中心，并且对相关内容进行加密。</p>
+<p>不过，很多时候，很多公司，更习惯于将数据库连接信息统一配置在 应用服务器(比如Tomcat)，由系统运维人员统一对应用服务器和数据库进行管理，此时我们就需要用到 JNDI。</p>
+<p>Spring Boot为我们做了很多事，所以其使用JNDI获取数据源依旧很简单，我们分两种情况说明：</p>
+<ul>
+<li><p>使用内置的 <code>servlet</code> 容器 ，以默认的 <code>Tomcat</code>为例</p>
+<ol>
+<li><p>修改 <code>application.yml</code> 中的配置，<code>spring.datasource</code> 此时只需要唯一配置 <code>jndi-name</code></p>
+<pre><code>&gt; jndi-name 的值，可以是 ```java:/comp/env/jdbc/practice```，也可以是 ```jdbc/practice```，Spring Boot在解析参数时，如果没有前缀，会自动补上
+
+   spring:
+        datasource:
+        jndi-name: java:/comp/env/jdbc/practice</code></pre></li>
+</ol>
+</li>
+</ul>
+<ol start="2">
+<li><p>添加 JNDI 的配置代码。JNDI本来应该配置在 JBOSS或者Tomcat这些容器里面，而这里我们使用的时内置容器，无法直接在容器里面配置，所以需要通过编码的方式添加 JNDI 信息</p>
+<pre><code>   @Configuration
+    public class JndiConfig {
+
+        @Bean
+        public ServletWebServerFactory servletContainer() {
+            TomcatServletWebServerFactory tomcat = new TomcatServletWebServerFactory() {
+                @Override
+                protected TomcatWebServer getTomcatWebServer(Tomcat tomcat) {
+                    // 内置容器默认禁用了 命名服务，此处必须要启用
+                    tomcat.enableNaming();
+                    return super.getTomcatWebServer(tomcat);
+                }
+                @Override
+                protected void postProcessContext(Context context) {
+                    // 在JNDI里，资源抽象为了 Resouce，此处是配置数据库连接信息
+                    ContextResource resource = new ContextResource();
+                    resource.setName(&quot;jdbc/practice&quot;);
+                    resource.setType(DataSource.class.getName());
+                    resource.setProperty(&quot;driverClassName&quot;, &quot;com.mysql.jdbc.Driver&quot;);
+                    resource.setProperty(&quot;url&quot;, &quot;jdbc:mysql://localhost:3306/practice&quot;);
+                    resource.setProperty(&quot;username&quot;, &quot;root&quot;);
+                    resource.setProperty(&quot;password&quot;,&quot;kevin&quot;);
+                    context.getNamingResources().addResource(resource);
+                    super.postProcessContext(context);
+                }
+            };
+            return tomcat;
+        }
+    }</code></pre></li>
+</ol>
+<ol start="3">
+<li><p>JNDI配置的数据源，默认使用 DBCP 的数据库连接池，所以需要添加 DBCP的依赖</p>
+<pre><code>   &lt;dependency&gt;
+        &lt;groupId&gt;org.apache.tomcat&lt;/groupId&gt;
+        &lt;artifactId&gt;tomcat-dbcp&lt;/artifactId&gt;
+        &lt;version&gt;9.0.14&lt;/version&gt;
+        &lt;scope&gt;provided&lt;/scope&gt;
+    &lt;/dependency&gt;</code></pre></li>
+</ol>
+<pre><code>  此时，启动应用，能正确查询数据</code></pre><ul>
+<li><p>使用外置的 <code>servelt</code> 容器，以 <code>Tomcat</code>为例</p>
+<pre><code>如果项目打包成 war， JNDI 配置在 容器里面，则 相对于 上面 使用内置的servlet容器而言，配置更简单
+
+1. 修改 ```application.yml``` 中的配置。同 内置 容器，此处不赘述
+
+2. 在Tomcat的 context.xml 文件内，添加数据源配置
+
+      &lt;Resource 
+           name=&quot;jdbc/practice&quot;
+           auth=&quot;Container&quot; 
+           type=&quot;javax.sql.DataSource&quot; 
+           driverClassName=&quot;com.mysql.jdbc.Driver&quot; 
+           url=&quot;jdbc:mysql://localhost:3306/practice&quot; 
+           username=&quot;mysql&quot; 
+           password=&quot;mysql&quot; 
+           maximumPoolSize=&quot;20&quot; 
+           minimumIdle=&quot;10&quot; 
+           connectionTimeout=&quot;300000&quot;
+      /&gt;</code></pre></li>
+</ul>
+<pre><code>  内置容器有的 JNDIConfig配置，以及 DBCP依赖，都不需要。DBCP依赖不需要是因为Tomcat容器本身提供了这个依赖，在Tomcat安装目录的lib下有。
+
+  启动Tomcat验证。
+
+至于如何将Spring Boot项目打包部署在外部Tomcat容器，参见[http://www.baidu.com](http://www.baidu.com)</code></pre><p>前面有说到，JNDI 配置的数据源，默认使用的是 DBCP 的数据库连接池，虽然 DBCP2.0 后性能有了极大提升，但是从网上各种资料可以得知，目前性能最好的数据库连接池是 hikariCP，其次是 Druid，并且 Spring Boot默认使用的连接池其实也是 hikariCP，所以我们需要能替换 JNDI 对应的数据库连接池。</p>
+<ol>
+<li><p>引入 hikariCP 依赖</p>
+<pre><code> &lt;dependency&gt;
+     &lt;groupId&gt;com.zaxxer&lt;/groupId&gt;
+        &lt;artifactId&gt;HikariCP&lt;/artifactId&gt;
+        &lt;version&gt;3.3.0&lt;/version&gt;
+    &lt;/dependency&gt;</code></pre></li>
+</ol>
+<ol start="2">
+<li><p>配置 JNDI 资源的 factory 属性为 HikariJNDIFactory</p>
 <blockquote>
-<p>联合文件系统(UnionFS)是一种分层、轻量级，高性能的文件系统，它支持对文件系统的修改作为一次提交来一层层叠加，同时可以将不同目录挂载到同一虚拟文件系统下</p>
+<p>即添加 <code>factory=&quot;com.zaxxer.hikari.HikariJNDIFactory&quot;</code> 这个配置，告诉JNDI如何获取这个资源，查看 HikariJNDIFactory 源码可知，其原理为 SPI</p>
 </blockquote>
-<p>所有的镜像的顶层都基于基础镜像(没有父镜像，同心圆的最内层)，我们平时使用的镜像就类似于所看到的同心圆的最外层，它实际是由一层层的文件系统叠加而成。</p>
-<p>docker镜像的最底层是引导文件系统(bootfs)，也就是同心圆的最内层。bootfs主要包括bootloader和kernel，bootlaoder是引导加载kernel的，linux系统刚启动时会加载bootfs文件系统，当boot加载完后，整个内核就存在于内存中，此时内存的使用权已有bootfs转交给内核，系统也会卸载bootfs。</p>
-<p>在bootfs之上的时rootfs，rootfs包含典型的linux系统中的 /etc, /bin 等标准目录和文件。</p>
-<p>我们平时安装操作系统时，一个centos的镜像(ISO)文件大概4G左右，但是centos的docker镜像只有大概200M，是因为它只包含基础内容，比如最基本的命令，工具和程序库，也就是构建于bootfs之上，额外提供所需的rootfs即可，其他硬件资源等共用宿主机的。不同的发行版，其bootfs基本一致，rootfs会有些差别。</p>
-<h3 id="容器"><a href="#容器" class="headerlink" title="容器"></a>容器</h3><p>docker容器类似于一个轻量级的沙箱，是运行的镜像示例，所以也就是包含各种环境和软件的简易版的linux系统</p>
-<p>容器的启动，开始，停止，删除等都是相互隔离，互补可见的。</p>
-<p>镜像自身是只读的，容器在镜像启动的时候，会在镜像的最上层创建一个可写层。</p>
-<h3 id="仓库"><a href="#仓库" class="headerlink" title="仓库"></a>仓库</h3><p>仓库是镜像文件的存放场所，同一类型的镜像文件通过标签(tag)区分，标签类似于版本号。</p>
+<pre><code>    &lt;Resource 
+            name=&quot;jdbc/practice&quot; 
+            factory=&quot;com.zaxxer.hikari.HikariJNDIFactory&quot;
+            auth=&quot;Container&quot; 
+            type=&quot;javax.sql.DataSource&quot;
+            maximumPoolSize=&quot;20&quot; 
+            minimumIdle=&quot;10&quot; 
+            connectionTimeout=&quot;300000&quot;
+            driverClassName=&quot;com.mysql.jdbc.Driver&quot; 
+            jdbcUrl=&quot;jdbc:mysql://localhost:3306/practice&quot;
+            username=&quot;mysql&quot; 
+            password=&quot;mysql&quot;
+        /&gt;</code></pre></li>
+</ol>
+<ol start="3">
+<li>请注意，上述的 Resource 配置跟前面的还有个不一样的地方，默认情况下使用的是  <code>url=&quot;jdbc:mysql://localhost:3306/practice&quot;</code>，而在使用 hikariCP 连接池时，该属性需要调整为 <code>jdbcUrl=&quot;jdbc:mysql://localhost:3306/practice&quot;</code>。否则，将获取不到 JNDI 数据源</li>
+<li>如果是，使用内置的容器，则需要在对应数据库信息配置的地方，添加一个factory属性和修改url属性。</li>
+<li>启动应用，验证。</li>
+</ol>
 </section>
 
     <!-- NAV START -->
@@ -190,17 +308,17 @@
   <div class="nav-container">
     <!-- reverse left and right to put prev and next in a more logic postition -->
     
-      <a class="nav-left" href="/2019/07/15/springboot-with-mysql.html">
+      <a class="nav-left" href="/2019/07/15/docker-introduction.html">
         <span class="nav-arrow">← </span>
         
-          SpringBoot(二):集成Mysql
+          docker基本概念
         
       </a>
     
     
-      <a class="nav-right" href="/2019/07/15/springboot-with-jndi.html">
+      <a class="nav-right" href="/2019/07/17/install-docker-on-centos7.html">
         
-          SpringBoot(三):集成JNDI数据源
+          在CentOS7上安装docker
         
         <span class="nav-arrow"> →</span>
       </a>
@@ -248,7 +366,7 @@
 
 <script>
   (function () {
-    /**var url = 'http://localhost:4000/2019/07/15/docker-introduction.html';
+    /**var url = 'http://localhost:4000/2019/07/15/springboot-with-jndi.html';
     var banner = ''
     if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
       $('#article-banner').css({

@@ -10,7 +10,7 @@
   
   <title>
     
-      docker基本概念 | WellMan
+      Hexo自建博客常用操作 | WellMan
     
   </title>
   <link href="/css/font-awesome.min.css" rel="stylesheet">
@@ -134,8 +134,8 @@
 </header>
 
     <!--<div id="article-banner">
-  <h2>docker基本概念</h2>
-  <p class="post-date">2019-07-15</p>
+  <h2>Hexo自建博客常用操作</h2>
+  <p class="post-date">2019-08-18</p>
   <div class="arrow-down">
     <a href="javascript:;"></a>
   </div>
@@ -144,66 +144,51 @@
   <!-- Article START -->
   <article class="post-article">
     <header>
-        <h2>docker基本概念</h2>
+        <h2>Hexo自建博客常用操作</h2>
         <p class="post-ref">
           <span class="post-date">
             <i class="fa fa-calendar"></i>
-            2019-07-15
+            2019-08-18
           </span>
           <span>
               
                 &nbsp;&nbsp;&nbsp;&nbsp;
                   <span class="fa fa-tags">标签</span>
                   
-  <a href="/tags#docker" >
-    <span class="tag-code">docker</span>
+  <a href="/tags#hexo" >
+    <span class="tag-code">hexo</span>
   </a>
 
               
           </span>
         </p>
     </header>
-    <section class="markdown-content"><h2 id="什么是docekr"><a href="#什么是docekr" class="headerlink" title="什么是docekr"></a>什么是docekr</h2><p>docker是基于GO语言开发的云开源容器项目，诞生与2013年。</p>
-<p>其主要目标是”build, ship and run any app, anywhere”，即通过对应用的封装(packaging)， 分发(distribution)，部署(deployment)，运行(runtime)生命周期进行管理，达到应用组件”一次封装，到处运行”的目的。</p>
-<p>docker来源于linux的容器技术(LXC),在LXC的基础上，docker进一步优化了容器的使用体验，它提供了各种容器管理工具让用户无需关心底层操作，引入分层文件系统构建和高效的镜像机制，降低了迁移的难度。现在新版的docker已不再直接基于LXC</p>
-<h2 id="为什么使用docker"><a href="#为什么使用docker" class="headerlink" title="为什么使用docker"></a>为什么使用docker</h2><p>以Java应用为例，在以前，我们编码完成后，要先在测试环境进行测试，所以我们会将打包好的war包交给运维人员，由他们在测试环境进行部署，测试通过后，也由他们在生产环境进行部署。</p>
-<p>我们常常遇到这样一种情况，同样一个war包，在测试环境运行得好好的，可是一部署到生产环境，应用无法启动，费劲千辛万苦，最终发现测试和生产环境某些配置不一致，更可怕的是，应用可能需要部署到很多台服务器上，这简直就是灾难，也严重影响工作效率。</p>
-<p>而docker，最终提交给运维的是一个包含运行环境的，能直接运行的镜像，不管是在哪里运行，应用的运行环境都是一致的，不再会因为应用的环境问题导致应用无法启动。</p>
-<p>docker与传统虚拟机相比，他的启动更快，对系统的资源需求更少，它不像虚拟机每个都需要分配独占的内存和磁盘等资源，docker共享宿主机的硬件资源。docker有比虚拟机更少的抽象层，由于docker不需要Hypervisor实现硬件资源的虚拟化，运行在docker上的程序使用的都是物理机的硬件资源。</p>
-<h2 id="核心概念"><a href="#核心概念" class="headerlink" title="核心概念"></a>核心概念</h2><h3 id="镜像-image"><a href="#镜像-image" class="headerlink" title="镜像(image)"></a>镜像(image)</h3><p>镜像是创建docker容器的基础，是一种轻量级的，可执行的独立软件包，用来打包软件运行环境和基于运行环境开发的软件，它包含某个软件所需的所有内容，包括代码、运行时、库、环境变量和配置文件。</p>
-<p>docker镜像的底层原理是联合文件系统(UnionFS)，镜像像一个同心圆，一层套着一层。</p>
-<blockquote>
-<p>联合文件系统(UnionFS)是一种分层、轻量级，高性能的文件系统，它支持对文件系统的修改作为一次提交来一层层叠加，同时可以将不同目录挂载到同一虚拟文件系统下</p>
-</blockquote>
-<p>所有的镜像的顶层都基于基础镜像(没有父镜像，同心圆的最内层)，我们平时使用的镜像就类似于所看到的同心圆的最外层，它实际是由一层层的文件系统叠加而成。</p>
-<p>docker镜像的最底层是引导文件系统(bootfs)，也就是同心圆的最内层。bootfs主要包括bootloader和kernel，bootlaoder是引导加载kernel的，linux系统刚启动时会加载bootfs文件系统，当boot加载完后，整个内核就存在于内存中，此时内存的使用权已有bootfs转交给内核，系统也会卸载bootfs。</p>
-<p>在bootfs之上的时rootfs，rootfs包含典型的linux系统中的 /etc, /bin 等标准目录和文件。</p>
-<p>我们平时安装操作系统时，一个centos的镜像(ISO)文件大概4G左右，但是centos的docker镜像只有大概200M，是因为它只包含基础内容，比如最基本的命令，工具和程序库，也就是构建于bootfs之上，额外提供所需的rootfs即可，其他硬件资源等共用宿主机的。不同的发行版，其bootfs基本一致，rootfs会有些差别。</p>
-<h3 id="容器"><a href="#容器" class="headerlink" title="容器"></a>容器</h3><p>docker容器类似于一个轻量级的沙箱，是运行的镜像示例，所以也就是包含各种环境和软件的简易版的linux系统</p>
-<p>容器的启动，开始，停止，删除等都是相互隔离，互补可见的。</p>
-<p>镜像自身是只读的，容器在镜像启动的时候，会在镜像的最上层创建一个可写层。</p>
-<h3 id="仓库"><a href="#仓库" class="headerlink" title="仓库"></a>仓库</h3><p>仓库是镜像文件的存放场所，同一类型的镜像文件通过标签(tag)区分，标签类似于版本号。</p>
-</section>
+    <section class="markdown-content"><p>本文记录一些在使用Hexo搭建个人博客的过程中，遇到的一些需要额外设置的操作。</p>
+<h4 id="一、引用自己的文章"><a href="#一、引用自己的文章" class="headerlink" title="一、引用自己的文章"></a>一、引用自己的文章</h4><p>写文章的时候，有些知识点很可能在自己其他的博文中已经说明过，一般这时候不会再大篇幅的重新写一遍，而是直接引用已有的文章。</p>
+<p>对于外部站点的文章，也就是不是自己博客的，可以直接超链接，引用外部的地址，比如 <a href="https://wwww.baidu.com" target="_blank" rel="noopener">百度</a></p>
+<p>但是，对于自己博客的文章，使用这种超链接的方式的话：</p>
+<ul>
+<li>如果使用绝对路径，一旦域名发生变化，比如开始直接使用gitpages提供的域名，后来需要改成自己购买的域名，这时候会需要找到所有的文章进行调整。</li>
+<li>而如果使用相对路径，很多时候，我们的文章按照时间进行归类，相对路劲需要指明各级文件夹，也很麻烦。</li>
+</ul>
+<p>实际上，Hexo已经为我们提供了这种需求的实现，比如，当前文章，我想引用自己博客的 <a href="/2019/07/13/aboutme.html" title="关于我">关于我</a> ，只需要在文章中需要引用的位置添加</p>
+<pre><code>{% post_link 关于我 %}</code></pre><p>即可。</p>
+<p>其中，<code>关于我</code> 是文件名称，也就是，在我的博客文章中，存在这样一个文件 <code>关于我.md</code></p>
+<p>它的基本格式为</p>
+<pre><code>{% post_link 文章文件名(不要后缀) 文章标题(可选) %}</code></pre></section>
 
     <!-- NAV START -->
     
   <div class="nav-container">
     <!-- reverse left and right to put prev and next in a more logic postition -->
     
-      <a class="nav-left" href="/2019/07/15/springboot-with-mysql.html">
+      <a class="nav-left" href="/2019/08/19/idea-database.html">
         <span class="nav-arrow">← </span>
         
-          SpringBoot(二):集成Mysql
+          使用IDEA管理数据库
         
       </a>
     
-    
-      <a class="nav-right" href="/2019/07/15/springboot-with-jndi.html">
-        
-          SpringBoot(三):集成JNDI数据源
-        
-        <span class="nav-arrow"> →</span>
-      </a>
     
   </div>
 
@@ -248,7 +233,7 @@
 
 <script>
   (function () {
-    /**var url = 'http://localhost:4000/2019/07/15/docker-introduction.html';
+    /**var url = 'http://localhost:4000/2019/08/19/hexo-general-settings.html';
     var banner = ''
     if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
       $('#article-banner').css({

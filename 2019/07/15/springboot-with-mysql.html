@@ -10,7 +10,7 @@
   
   <title>
     
-      SpringBoot集成Mysql | WellMan
+      SpringBoot(二):集成Mysql | WellMan
     
   </title>
   <link href="/css/font-awesome.min.css" rel="stylesheet">
@@ -134,7 +134,7 @@
 </header>
 
     <!--<div id="article-banner">
-  <h2>SpringBoot集成Mysql</h2>
+  <h2>SpringBoot(二):集成Mysql</h2>
   <p class="post-date">2019-07-14</p>
   <div class="arrow-down">
     <a href="javascript:;"></a>
@@ -144,7 +144,7 @@
   <!-- Article START -->
   <article class="post-article">
     <header>
-        <h2>SpringBoot集成Mysql</h2>
+        <h2>SpringBoot(二):集成Mysql</h2>
         <p class="post-ref">
           <span class="post-date">
             <i class="fa fa-calendar"></i>
@@ -167,25 +167,112 @@
           </span>
         </p>
     </header>
-    <section class="markdown-content"><p>前面我们写了一个入门级的springboot应用，在实际的开发中，数据是保存在数据库的，需要</p>
-</section>
+    <section class="markdown-content"><a href="/2019/07/14/springboot-helloworld.html" title="SpringBoot(一):HelloWorld">SpringBoot(一):HelloWorld</a> 对于如何创建一个SpringBoot应用做了描述，本文来看看如何在SpringBoot应用中集成Mysql
+
+<h3 id="前置条件"><a href="#前置条件" class="headerlink" title="前置条件"></a>前置条件</h3><ul>
+<li>IDEA 2019.2</li>
+<li>本机已安装Mysql数据库</li>
+<li>使用IDEA的DataSource进行数据库的管理</li>
+<li>JDK 1.8</li>
+<li>Mysql 5.7</li>
+<li>SpringBoot 2.1.6.RELEASE</li>
+</ul>
+<p>如何使用IDEA管理和操作数据库，请查看<a href="/2019/08/19/idea-database.html" title="使用IDEA管理数据库">使用IDEA管理数据库</a></p>
+<h3 id="添加数据库依赖"><a href="#添加数据库依赖" class="headerlink" title="添加数据库依赖"></a>添加数据库依赖</h3><p>要在项目中集成数据库，最基本的我们需要引入 <code>数据库驱动</code> 以及 <code>ORM</code>，所以这里的 <code>pom.xml</code> 文件如下：</p>
+<pre><code>&lt;dependencies&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-boot-starter-test&lt;/artifactId&gt;
+        &lt;scope&gt;test&lt;/scope&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-boot-starter-jdbc&lt;/artifactId&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;mysql&lt;/groupId&gt;
+        &lt;artifactId&gt;mysql-connector-java&lt;/artifactId&gt;
+        &lt;version&gt;5.1.48&lt;/version&gt;
+    &lt;/dependency&gt;
+&lt;/dependencies&gt;</code></pre><p>这里都没有指定版本，是基于 <a href="/2019/07/14/springboot-helloworld.html" title="SpringBoot(一):HelloWorld">SpringBoot(一):HelloWorld</a> 的父pom。</p>
+<ul>
+<li><code>spring-boot-starter-test</code> 是测试依赖，会自动添加JUnit</li>
+<li>这里没有使用额外的ORM框架，直接使用 <code>JdbcTemplate</code> ，由 <code>spring-boot-starter-jdbc</code> 引入</li>
+<li><code>mysql-connector-java</code> 是数据库驱动，使用mysql数据库，需要注意的是，其版本要与安装的Mysql服务器兼容。</li>
+</ul>
+<h3 id="编写SpringBoot启动类"><a href="#编写SpringBoot启动类" class="headerlink" title="编写SpringBoot启动类"></a>编写SpringBoot启动类</h3><p>有了之前的HelloWorld基础，这个步骤很简单</p>
+<pre><code>@SpringBootApplication
+public class SpringBootMysqlApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(SpringBootMysqlApplication.class, args);
+    }
+}</code></pre><h3 id="添加数据源配置"><a href="#添加数据源配置" class="headerlink" title="添加数据源配置"></a>添加数据源配置</h3><p>接下来，需要配置应用操作的数据源，直接在 <code>application.yml</code> 文件中进行配置</p>
+<pre><code>spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    username: root
+    password: kevin
+    url: jdbc:mysql://localhost:3306/practice</code></pre><h3 id="编写数据操作的代码"><a href="#编写数据操作的代码" class="headerlink" title="编写数据操作的代码"></a>编写数据操作的代码</h3><pre><code>@Service
+public class UserService {
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+    public void testCreateUser(String userName) {
+        jdbcTemplate.update(&quot;insert into t_user(user_name) values(?)&quot;, userName);
+    }
+
+    public String queryUserNameById(Integer userId) {
+        String userName = jdbcTemplate.queryForObject(&quot;select user_name from t_user where id=&quot; + userId, String.class);
+        return userName;
+    }
+}</code></pre><h3 id="编写单元测试类"><a href="#编写单元测试类" class="headerlink" title="编写单元测试类"></a>编写单元测试类</h3><pre><code>@RunWith(SpringRunner.class)
+@SpringBootTest
+public class UserServiceTest {
+
+    public static final Logger LOGGER = LoggerFactory.getLogger(UserServiceTest.class);
+
+    @Autowired
+    private UserService userService;
+
+    @Test
+    public void testCreateUser() {
+        userService.testCreateUser(&quot;nihao&quot;);
+    }
+
+    @Test
+    public void testQueryUserNameById() {
+        String userName = userService.queryUserNameById(1);
+        LOGGER.info(userName);
+    }
+}</code></pre><p>因为这些步骤都比较简单，没有什么额外的有困难的操作，所以没有详细解释，相信很容易看懂。</p>
+<p>最后，启动单元测试方法，可以看到控制台打印了结果 <strong>hello</strong></p>
+<pre><code>2019-08-18 21:21:53.819  INFO 5532 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+Sun Aug 18 21:21:54 CST 2019 WARN: Establishing SSL connection without server&#39;s identity verification is not recommended. According to MySQL 5.5.45+, 5.6.26+ and 5.7.6+ requirements SSL connection must be established by default if explicit option isn&#39;t set. For compliance with existing applications not using SSL the verifyServerCertificate property is set to &#39;false&#39;. You need either to explicitly disable SSL by setting useSSL=false, or set useSSL=true and provide truststore for server certificate verification.
+2019-08-18 21:21:54.212  INFO 5532 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2019-08-18 21:21:54.246  INFO 5532 --- [           main] s.w.d.springboot.mysql.UserServiceTest   : hello
+
+
+2019-08-18 21:21:54.271  INFO 5532 --- [       Thread-2] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2019-08-18 21:21:54.284  INFO 5532 --- [       Thread-2] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.</code></pre><h3 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h3></section>
 
     <!-- NAV START -->
     
   <div class="nav-container">
     <!-- reverse left and right to put prev and next in a more logic postition -->
     
-      <a class="nav-left" href="/2019/07/13/springboot-with-jndi.html">
+      <a class="nav-left" href="/2019/07/14/springboot-helloworld.html">
         <span class="nav-arrow">← </span>
         
-          SpringBoot应用集成JNDI数据源
+          SpringBoot(一):HelloWorld
         
       </a>
     
     
-      <a class="nav-right" href="/2019/07/15/springboot-helloworld.html">
+      <a class="nav-right" href="/2019/07/15/docker-introduction.html">
         
-          SpringBoot之HelloWorld
+          docker基本概念
         
         <span class="nav-arrow"> →</span>
       </a>
